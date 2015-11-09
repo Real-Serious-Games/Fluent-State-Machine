@@ -42,7 +42,37 @@ namespace RSG
         T Handler { get; }
     }
 
-    public class State : IState
+    /// <summary>
+    /// Abstract class with features common to both typed (generic) and non-typed states.
+    /// </summary>
+    public abstract class AbstractState : IState
+    {
+        /// <summary>
+        /// Parent state, or null if this is the root level state.
+        /// </summary>
+        public IState Parent { get; set; }
+
+        /// <summary>
+        /// Stack of active child states.
+        /// </summary>
+        public Stack<IState> ActiveChildren { get; set; }
+
+        /// <summary>
+        /// Dictionary of all children (active and inactive), and their names.
+        /// </summary>
+        public IDictionary<string, IState> Children { get; set; }
+
+        public void ChangeState(string stateName)
+        {
+            throw new NotImplementedException();
+        }
+
+    }
+
+    /// <summary>
+    /// Non-typed state class.
+    /// </summary>
+    public class State : AbstractState
     {
         /// <summary>
         /// Construct the state as the root state.
@@ -55,22 +85,12 @@ namespace RSG
         /// <summary>
         /// Construct the state with a parent and a name.
         /// </summary>
-        public State(string stateName, IState parent)
+        public State(IState parent, string stateName)
         {
             this.Parent = parent;
-            parent.Children.Add(stateName, this);
-            parent.ActiveChildren.Push(this);
+            this.Parent.Children.Add(stateName, this);
+            this.Parent.ActiveChildren.Push(this);
         }
-
-        /// <summary>
-        /// Parent state, or null if this is the root level state.
-        /// </summary>
-        public IState Parent { get; set; }
-
-        /// <summary>
-        /// Stack of child states.
-        /// </summary>
-        public Stack<IState> ActiveChildren { get; set; }
 
         public Action<IState> OnEnter;
 
@@ -79,9 +99,32 @@ namespace RSG
         public Action<IState, float> OnUpdate;
     }
 
-    public class State<T> : IState<T>
+    /// <summary>
+    /// State with a specified handler type.
+    /// </summary>
+    public class State<T> : AbstractState, IState<T>
     {
-        public T Handler { get; }
+        /// <summary>
+        /// If no name is specified, default to the name of the class.
+        /// </summary>
+        public State(IState parent)
+        {
+            this.Parent = parent;
+            this.Parent.Children.Add(typeof(T).Name, this);
+            this.Parent.ActiveChildren.Push(this);
+        }
+
+        /// <summary>
+        /// Construct the state with a specified name and parent.
+        /// </summary>
+        public State(IState parent, string name)
+        {
+            this.Parent = parent;
+            this.Parent.Children.Add(name, this);
+            this.Parent.ActiveChildren.Push(this);
+        }
+
+        public T Handler { get; private set; }
 
         public Action<IState<T>> OnEnter;
 
