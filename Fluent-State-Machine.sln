@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent-State-Machine", "Fluent-State-Machine.csproj", "{74EC1B7F-CD01-4AF3-AED5-ED0393A3A069}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent-State-Machine.Tests", "Tests\Fluent-State-Machine.Tests.csproj", "{55DB04F4-F1BA-4A2D-9C83-3ECC5B7FC068}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{74EC1B7F-CD01-4AF3-AED5-ED0393A3A069}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74EC1B7F-CD01-4AF3-AED5-ED0393A3A069}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74EC1B7F-CD01-4AF3-AED5-ED0393A3A069}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55DB04F4-F1BA-4A2D-9C83-3ECC5B7FC068}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55DB04F4-F1BA-4A2D-9C83-3ECC5B7FC068}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55DB04F4-F1BA-4A2D-9C83-3ECC5B7FC068}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55DB04F4-F1BA-4A2D-9C83-3ECC5B7FC068}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
