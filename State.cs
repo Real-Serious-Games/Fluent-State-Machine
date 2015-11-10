@@ -18,7 +18,7 @@ namespace RSG
         /// <summary>
         /// Stack of active child states.
         /// </summary>
-        Queue<IState> ActiveChildren { get; set; }
+        Stack<IState> ActiveChildren { get; set; }
 
         /// <summary>
         /// Dictionary of all children (active and inactive), and their names.
@@ -62,16 +62,41 @@ namespace RSG
         /// </summary>
         public IDictionary<string, IState> Children { get; set; }
 
+        /// <summary>
+        /// Pops the current state from the stack and pushes the specified one on.
+        /// </summary>
         public void ChangeState(string stateName)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Push another state from the existing dictionary of children to the top of the state stack.
+        /// </summary>
+        public void PushState(string stateName)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Remove the current state from the active state stack and activate the state immediately beneath it.
+        /// </summary>
+        public void PopState()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Create a new state as a child of the current state.
+        /// </summary>
         public State CreateChild(string stateName)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Create a new state with a specified handler type. The state will take the name of its handler type.
+        /// </summary>
         public State<T> CreateChild<T>()
         {
             throw new NotImplementedException();
@@ -88,7 +113,6 @@ namespace RSG
             //return newState;
             throw new NotImplementedException();
         }
-
     }
 
     /// <summary>
