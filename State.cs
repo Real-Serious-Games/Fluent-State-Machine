@@ -137,7 +137,17 @@ namespace RSG
         /// </summary>
         public void PopState()
         {
-            throw new NotImplementedException();
+            // Exit and pop the current state
+            if (ActiveChildren.Count > 0)
+            {
+                ActiveChildren.Pop().Exit();
+            }
+
+            // Activate the next state down, if there is one
+            if (ActiveChildren.Count > 0)
+            {
+                ActiveChildren.Peek().Enter();
+            }
         }
 
         /// <summary>
