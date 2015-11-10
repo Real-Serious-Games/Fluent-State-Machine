@@ -89,7 +89,7 @@ namespace RSG
         /// </summary>
         public void ChangeState(string stateName)
         {
-            // Exit the current state
+            // Exit and pop the current state
             if (ActiveChildren.Count > 0)
             {
                 ActiveChildren.Pop().Exit();
@@ -113,7 +113,23 @@ namespace RSG
         /// </summary>
         public void PushState(string stateName)
         {
-            throw new NotImplementedException();
+            // Exit the current state
+            if (ActiveChildren.Count > 0)
+            {
+                ActiveChildren.Peek().Exit();
+            }
+
+            // Find the new state and add it
+            try
+            {
+                var newState = Children[stateName];
+                ActiveChildren.Push(newState);
+                newState.Enter();
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new ApplicationException("Tried to change to state \"" + stateName + "\", but it is not in the list of children.");
+            }
         }
 
         /// <summary>
