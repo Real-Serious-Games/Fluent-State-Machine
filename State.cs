@@ -18,7 +18,7 @@ namespace RSG
         /// <summary>
         /// Stack of active child states.
         /// </summary>
-        Stack<IState> ActiveChildren { get; set; }
+        Queue<IState> ActiveChildren { get; set; }
 
         /// <summary>
         /// Dictionary of all children (active and inactive), and their names.
@@ -67,6 +67,28 @@ namespace RSG
             throw new NotImplementedException();
         }
 
+        public State CreateChild(string stateName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public State<T> CreateChild<T>()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Construct a child state with a handler type and a name.
+        /// </summary>
+        public State<T> CreateChild<T>(string stateName)
+        {
+            //var newState = new State<T>();
+            //newState.Parent = this;
+            //this.Children.Add(stateName, newState);
+            //return newState;
+            throw new NotImplementedException();
+        }
+
     }
 
     /// <summary>
@@ -83,19 +105,19 @@ namespace RSG
         }
 
         /// <summary>
-        /// Construct the state with a parent and a name.
+        /// Action triggered on entering the state.
         /// </summary>
-        public State(IState parent, string stateName)
-        {
-            this.Parent = parent;
-            this.Parent.Children.Add(stateName, this);
-            this.Parent.ActiveChildren.Push(this);
-        }
-
         public Action<IState> OnEnter;
 
+        /// <summary>
+        /// Action triggered on exiting the state.
+        /// </summary>
         public Action<IState> OnExit;
 
+        /// <summary>
+        /// Action which passes the current state object and the delta time since the 
+        /// last update to a function.
+        /// </summary>
         public Action<IState, float> OnUpdate;
     }
 
@@ -104,32 +126,22 @@ namespace RSG
     /// </summary>
     public class State<T> : AbstractState, IState<T>
     {
-        /// <summary>
-        /// If no name is specified, default to the name of the class.
-        /// </summary>
-        public State(IState parent)
-        {
-            this.Parent = parent;
-            this.Parent.Children.Add(typeof(T).Name, this);
-            this.Parent.ActiveChildren.Push(this);
-        }
-
-        /// <summary>
-        /// Construct the state with a specified name and parent.
-        /// </summary>
-        public State(IState parent, string name)
-        {
-            this.Parent = parent;
-            this.Parent.Children.Add(name, this);
-            this.Parent.ActiveChildren.Push(this);
-        }
-
         public T Handler { get; private set; }
 
+        /// <summary>
+        /// Action triggered on entering the state.
+        /// </summary>
         public Action<IState<T>> OnEnter;
 
+        /// <summary>
+        /// Action triggered on exiting the state.
+        /// </summary>
         public Action<IState<T>> OnExit;
 
+        /// <summary>
+        /// Action which passes the current state object and the delta time since the 
+        /// last update to a function.
+        /// </summary>
         public Action<IState<T>, float> OnUpdate;
     }
 }
