@@ -32,7 +32,7 @@ namespace RSG.FluentStateMachineTests
         }
 
         [Fact]
-        public void calling_enter_on_state_triggers_update_action()
+        public void calling_enter_on_state_triggers_enter_action()
         {
             var state = new State();
 
@@ -45,7 +45,7 @@ namespace RSG.FluentStateMachineTests
         }
 
         [Fact]
-        public void calling_exit_on_state_triggers_update_action()
+        public void calling_exit_on_state_triggers_exit_action()
         {
             var state = new State();
 

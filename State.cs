@@ -238,7 +238,10 @@ namespace RSG
         /// </summary>
         public override void Exit()
         {
-            throw new NotImplementedException();
+            if (onExit != null)
+            {
+                onExit.Invoke(this);
+            }
         }
     }
 
