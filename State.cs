@@ -16,19 +16,25 @@ namespace RSG
         IState Parent { get; set; }
 
         /// <summary>
-        /// Stack of active child states.
-        /// </summary>
-        Stack<IState> ActiveChildren { get; set; }
-
-        /// <summary>
-        /// Dictionary of all children (active and inactive), and their names.
-        /// </summary>
-        IDictionary<string, IState> Children { get; set; }
-
-        /// <summary>
         /// Change to the state with the specified name.
         /// </summary>
         void ChangeState(string stateName);
+
+        /// <summary>
+        /// Push another state above the current one, so that popping it will return to the
+        /// current state.
+        /// </summary>
+        void PushState(string stateName);
+
+        /// <summary>
+        /// Exit out of the current state and enter whatever state is below it in the stack.
+        /// </summary>
+        void PopState();
+
+        /// <summary>
+        /// Update this state and its children with a specified delta time.
+        /// </summary>
+        void Update(float deltaTime);
     }
 
     /// <summary>
@@ -61,12 +67,12 @@ namespace RSG
         /// <summary>
         /// Stack of active child states.
         /// </summary>
-        public Stack<IState> ActiveChildren { get; set; }
+        private Stack<IState> ActiveChildren { get; set; }
 
         /// <summary>
         /// Dictionary of all children (active and inactive), and their names.
         /// </summary>
-        public IDictionary<string, IState> Children { get; set; }
+        private IDictionary<string, IState> Children { get; set; }
 
         /// <summary>
         /// Pops the current state from the stack and pushes the specified one on.
@@ -88,6 +94,14 @@ namespace RSG
         /// Remove the current state from the active state stack and activate the state immediately beneath it.
         /// </summary>
         public void PopState()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Update this state and its children with a specified delta time.
+        /// </summary>
+        public void Update(float deltaTime)
         {
             throw new NotImplementedException();
         }
@@ -132,18 +146,27 @@ namespace RSG
         /// <summary>
         /// Action triggered on entering the state.
         /// </summary>
-        public Action<IState> OnEnter;
+        public void SetEnterAction(Action<IState> onEnter)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Action triggered on exiting the state.
         /// </summary>
-        public Action<IState> OnExit;
+        public void SetExitAction(Action<IState> onExit)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Action which passes the current state object and the delta time since the 
         /// last update to a function.
         /// </summary>
-        public Action<IState, float> OnUpdate;
+        public void SetUpdateAction(Action<IState, float> onUpdate)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -156,17 +179,26 @@ namespace RSG
         /// <summary>
         /// Action triggered on entering the state.
         /// </summary>
-        public Action<IState<T>> OnEnter;
+        public void SetEnterAction(Action<IState<T>> onEnter)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Action triggered on exiting the state.
         /// </summary>
-        public Action<IState<T>> OnExit;
+        public void SetExitAction(Action<IState<T>> onExit)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Action which passes the current state object and the delta time since the 
         /// last update to a function.
         /// </summary>
-        public Action<IState<T>, float> OnUpdate;
+        public void SetUpdateAction(Action<IState<T>, float> onUpdate)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
