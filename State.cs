@@ -47,6 +47,12 @@ namespace RSG
     /// </summary>
     public abstract class AbstractState : IState
     {
+        public AbstractState()
+        {
+            Children = new Dictionary<string, IState>();
+            ActiveChildren = new Stack<IState>();
+        }
+
         /// <summary>
         /// Parent state, or null if this is the root level state.
         /// </summary>
@@ -91,7 +97,10 @@ namespace RSG
         /// </summary>
         public State CreateChild(string stateName)
         {
-            throw new NotImplementedException();
+            var newState = new State();
+            newState.Parent = this;
+            Children.Add(stateName, newState);
+            return newState;
         }
 
         /// <summary>
@@ -120,14 +129,6 @@ namespace RSG
     /// </summary>
     public class State : AbstractState
     {
-        /// <summary>
-        /// Construct the state as the root state.
-        /// </summary>
-        public State()
-        {
-            this.Parent = null;
-        }
-
         /// <summary>
         /// Action triggered on entering the state.
         /// </summary>
