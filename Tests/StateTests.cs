@@ -19,6 +19,45 @@ namespace RSG.FluentStateMachineTests
         }
 
         [Fact]
+        public void calling_update_on_state_triggers_update_action()
+        {
+            var state = new State();
+
+            var timesUpdateCalled = 0;
+            state.SetUpdateAction((s, dt) => timesUpdateCalled++);
+
+            state.Update(1.0f);
+
+            Assert.Equal(1, timesUpdateCalled);
+        }
+
+        [Fact]
+        public void calling_enter_on_state_triggers_update_action()
+        {
+            var state = new State();
+
+            var timesEnterCalled = 0;
+            state.SetEnterAction(_ => timesEnterCalled++);
+
+            state.Enter();
+
+            Assert.Equal(1, timesEnterCalled);
+        }
+
+        [Fact]
+        public void calling_exit_on_state_triggers_update_action()
+        {
+            var state = new State();
+
+            var timesExitCalled = 0;
+            state.SetExitAction(_ => timesExitCalled++);
+
+            state.Exit();
+
+            Assert.Equal(1, timesExitCalled);
+        }
+
+        [Fact]
         public void enter_is_called_on_active_state()
         {
             var rootState = new State();
