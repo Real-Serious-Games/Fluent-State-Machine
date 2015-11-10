@@ -35,6 +35,16 @@ namespace RSG
         /// Update this state and its children with a specified delta time.
         /// </summary>
         void Update(float deltaTime);
+
+        /// <summary>
+        /// Triggered when we enter the state.
+        /// </summary>
+        void Enter();
+
+        /// <summary>
+        /// Triggered when we exit the state.
+        /// </summary>
+        void Exit();
     }
 
     /// <summary>
@@ -101,10 +111,24 @@ namespace RSG
         /// <summary>
         /// Update this state and its children with a specified delta time.
         /// </summary>
-        public void Update(float deltaTime)
+        public virtual void Update(float deltaTime)
         {
-            throw new NotImplementedException();
+            // Update children
+            if (ActiveChildren.Count > 0)
+            {
+                ActiveChildren.Peek().Update(deltaTime);
+            }
         }
+
+        /// <summary>
+        /// Triggered when we enter the state.
+        /// </summary>
+        public abstract void Enter();
+
+        /// <summary>
+        /// Triggered when we exit the state.
+        /// </summary>
+        public abstract void Exit();
 
         /// <summary>
         /// Create a new state as a child of the current state.
@@ -143,6 +167,8 @@ namespace RSG
     /// </summary>
     public class State : AbstractState
     {
+        private Action<IState, float> onUpdate;
+
         /// <summary>
         /// Action triggered on entering the state.
         /// </summary>
@@ -164,6 +190,32 @@ namespace RSG
         /// last update to a function.
         /// </summary>
         public void SetUpdateAction(Action<IState, float> onUpdate)
+        {
+            this.onUpdate = onUpdate;
+        }
+
+        public override void Update(float deltaTime)
+        {
+            if (onUpdate != null)
+            {
+                onUpdate.Invoke(this, deltaTime);
+            }
+
+            base.Update(deltaTime);
+        }
+
+        /// <summary>
+        /// Triggered when we enter the state.
+        /// </summary>
+        public override void Enter()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Triggered when we exit the state.
+        /// </summary>
+        public override void Exit()
         {
             throw new NotImplementedException();
         }
@@ -197,6 +249,22 @@ namespace RSG
         /// last update to a function.
         /// </summary>
         public void SetUpdateAction(Action<IState<T>, float> onUpdate)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Triggered when we enter the state.
+        /// </summary>
+        public override void Enter()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Triggered when we exit the state.
+        /// </summary>
+        public override void Exit()
         {
             throw new NotImplementedException();
         }
