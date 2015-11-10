@@ -72,6 +72,14 @@ namespace RSG.FluentStateMachineTests
         }
 
         [Fact]
+        public void change_to_non_existant_state_throws_exception()
+        {
+            var rootState = new State();
+
+            Assert.Throws<ApplicationException>(() => rootState.ChangeState("unknown state"));
+        }
+
+        [Fact]
         public void new_state_is_inactive_by_default()
         {
             var rootState = new State();
@@ -139,6 +147,14 @@ namespace RSG.FluentStateMachineTests
             rootState.PushState("bar");
 
             Assert.Equal(1, timesEnterCalled);
+        }
+
+        [Fact]
+        public void push_non_existant_state_throws_exception()
+        {
+            var rootState = new State();
+
+            Assert.Throws<ApplicationException>(() => rootState.PushState("unknown state"));
         }
 
         [Fact]
