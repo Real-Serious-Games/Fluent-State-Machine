@@ -185,6 +185,7 @@ namespace RSG
     {
         private Action<IState> onEnter;
         private Action<IState, float> onUpdate;
+        private Action<IState> onExit;
 
         /// <summary>
         /// Action triggered on entering the state.
@@ -199,7 +200,7 @@ namespace RSG
         /// </summary>
         public void SetExitAction(Action<IState> onExit)
         {
-            throw new NotImplementedException();
+            this.onExit = onExit;
         }
 
         /// <summary>
