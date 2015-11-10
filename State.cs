@@ -89,7 +89,23 @@ namespace RSG
         /// </summary>
         public void ChangeState(string stateName)
         {
-            throw new NotImplementedException();
+            // Exit the current state
+            if (ActiveChildren.Count > 0)
+            {
+                ActiveChildren.Pop().Exit();
+            }
+
+            // Find the new state and add it
+            try
+            {
+                var newState = Children[stateName];
+                ActiveChildren.Push(newState);
+                newState.Enter();
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new ApplicationException("Tried to change to state \"" + stateName + "\", but it is not in the list of children.");
+            }
         }
 
         /// <summary>
@@ -167,6 +183,7 @@ namespace RSG
     /// </summary>
     public class State : AbstractState
     {
+        private Action<IState> onEnter;
         private Action<IState, float> onUpdate;
 
         /// <summary>
@@ -174,7 +191,7 @@ namespace RSG
         /// </summary>
         public void SetEnterAction(Action<IState> onEnter)
         {
-            throw new NotImplementedException();
+            this.onEnter = onEnter;
         }
 
         /// <summary>
@@ -209,7 +226,10 @@ namespace RSG
         /// </summary>
         public override void Enter()
         {
-            throw new NotImplementedException();
+            if (onEnter != null)
+            {
+                onEnter.Invoke(this);
+            }
         }
 
         /// <summary>
