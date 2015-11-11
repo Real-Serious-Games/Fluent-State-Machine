@@ -210,5 +210,38 @@ namespace RSG.FluentStateMachineTests
 
             mockState.Verify(state => state.Update(It.IsAny<float>()), Times.Once());
         }
+
+        [Fact]
+        public void condition_is_triggered_on_update()
+        {
+            var rootState = new State();
+
+            var timesConditionMet = 0;
+
+            rootState.SetCondition(() => true, state => timesConditionMet++);
+
+            rootState.Update(1.0f);
+
+            Assert.Equal(1, timesConditionMet);
+        }
+
+        [Fact]
+        public void condition_is_only_triggered_when_met()
+        {
+            var rootState = new State();
+
+            var testCondition = false;
+            var timesConditionMet = 0;
+
+            rootState.SetCondition(() => testCondition, state => timesConditionMet++);
+
+            rootState.Update(1.0f);
+
+            testCondition = true;
+
+            rootState.Update(1.0f);
+
+            Assert.Equal(1, timesConditionMet);
+        }
     }
 }

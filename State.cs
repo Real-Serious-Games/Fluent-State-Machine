@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace RSG
@@ -155,6 +156,15 @@ namespace RSG
         /// </summary>
         public virtual void Update(float deltaTime)
         {
+            // Update conditions
+            foreach (var conditon in conditions)
+            {
+                if (conditon.Predicate.Compile().Invoke())
+                {
+                    conditon.Action.Invoke(this);
+                }
+            }
+
             // Update children
             if (ActiveChildren.Count > 0)
             {
@@ -195,6 +205,22 @@ namespace RSG
         public void AddChild(IState newState)
         {
             throw new NotImplementedException();
+        }
+
+        private struct Condition
+        {
+            public Expression<Func<bool>> Predicate;
+            public Action<IState> Action;
+        }
+
+        private IList<Condition> conditions = new List<Condition>();
+
+        public void SetCondition(Expression<Func<bool>> predicate, Action<IState> action)
+        {
+            conditions.Add(new Condition() {
+                Predicate = predicate,
+                Action = action
+            });
         }
     }
 
