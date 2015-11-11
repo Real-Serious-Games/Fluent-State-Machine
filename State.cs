@@ -175,31 +175,18 @@ namespace RSG
         /// <summary>
         /// Create a new state as a child of the current state.
         /// </summary>
-        public State CreateChild(string stateName)
+        public void AddChild(IState newState, string stateName)
         {
-            var newState = new State();
             newState.Parent = this;
             Children.Add(stateName, newState);
-            return newState;
         }
 
         /// <summary>
-        /// Create a new state with a specified handler type. The state will take the name of its handler type.
+        /// Create a new state as a child of the current state and automatically derive 
+        /// its name from its handler type.
         /// </summary>
-        public State<T> CreateChild<T>()
+        public void AddChild(IState newState)
         {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Construct a child state with a handler type and a name.
-        /// </summary>
-        public State<T> CreateChild<T>(string stateName)
-        {
-            //var newState = new State<T>();
-            //newState.Parent = this;
-            //this.Children.Add(stateName, newState);
-            //return newState;
             throw new NotImplementedException();
         }
     }
