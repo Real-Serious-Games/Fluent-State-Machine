@@ -152,6 +152,19 @@ namespace RSG.FluentStateMachineTests
         }
 
         [Fact]
+        public void add_child_with_already_existing_name_throws_exception()
+        {
+            var rootState = new State();
+
+            var firstChildState = new State();
+            var secondChildState = new State();
+
+            rootState.AddChild(firstChildState, "test");
+
+            Assert.Throws<ApplicationException>(() => rootState.AddChild(secondChildState, "test"));
+        }
+
+        [Fact]
         public void pop_state_exits_the_current_state()
         {
             var rootState = new State();

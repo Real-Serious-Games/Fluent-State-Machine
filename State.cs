@@ -177,8 +177,15 @@ namespace RSG
         /// </summary>
         public void AddChild(IState newState, string stateName)
         {
-            newState.Parent = this;
-            Children.Add(stateName, newState);
+            try
+            {
+                Children.Add(stateName, newState);
+                newState.Parent = this;
+            }
+            catch (ArgumentException)
+            {
+                throw new ApplicationException("State with name \"" + stateName + "\" already exists in list of children.");
+            }
         }
 
         /// <summary>
