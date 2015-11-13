@@ -9,7 +9,7 @@ namespace RSG
     /// <summary>
     /// Builder providing a fluent API for constructing states.
     /// </summary>
-    interface IStateBuilder<T, TParent>
+    public interface IStateBuilder<T, TParent>
     {
         /// <summary>
         /// Create a child state with a specified handler type. The state will take the

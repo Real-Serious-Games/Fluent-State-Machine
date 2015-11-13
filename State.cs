@@ -60,14 +60,6 @@ namespace RSG
     }
 
     /// <summary>
-    /// Dummy handler class for the root state.
-    /// </summary>
-    public class RootStateHandler
-    {
-
-    }
-
-    /// <summary>
     /// State with a specified handler type.
     /// </summary>
     public class State<T> : IState<T>
