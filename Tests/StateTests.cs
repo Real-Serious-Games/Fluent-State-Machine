@@ -9,14 +9,19 @@ namespace RSG.FluentStateMachineTests
 {
     public class StateTests
     {
-        class TestStateHandler { }
+        class TestState : AbstractState { }
+
+        AbstractState CreateTestState()
+        {
+            return new TestState();
+        }
 
         [Fact]
         public void new_state_has_correct_parent()
         {
-            var rootState = new State<TestStateHandler>();
+            var rootState = CreateTestState();
 
-            var childState = new State<TestStateHandler>();
+            var childState = CreateTestState();
             rootState.AddChild(childState, "foo");
 
             Assert.Equal(rootState, childState.Parent);
@@ -25,10 +30,10 @@ namespace RSG.FluentStateMachineTests
         [Fact]
         public void calling_update_on_state_triggers_update_action()
         {
-            var state = new State<TestStateHandler>();
+            var state = CreateTestState();
 
             var timesUpdateCalled = 0;
-            state.SetUpdateAction((s, dt) => timesUpdateCalled++);
+            state.SetUpdateAction(dt => timesUpdateCalled++);
 
             state.Update(1.0f);
 
@@ -38,10 +43,10 @@ namespace RSG.FluentStateMachineTests
         [Fact]
         public void calling_enter_on_state_triggers_enter_action()
         {
-            var state = new State<TestStateHandler>();
+            var state = CreateTestState();
 
             var timesEnterCalled = 0;
-            state.SetEnterAction(_ => timesEnterCalled++);
+            state.SetEnterAction(() => timesEnterCalled++);
 
             state.Enter();
 
@@ -51,10 +56,10 @@ namespace RSG.FluentStateMachineTests
         [Fact]
         public void calling_exit_on_state_triggers_exit_action()
         {
-            var state = new State<TestStateHandler>();
+            var state = CreateTestState();
 
             var timesExitCalled = 0;
-            state.SetExitAction(_ => timesExitCalled++);
+            state.SetExitAction(() => timesExitCalled++);
 
             state.Exit();
 
@@ -64,7 +69,7 @@ namespace RSG.FluentStateMachineTests
         [Fact]
         public void enter_is_called_on_active_state()
         {
-            var rootState = new State<TestStateHandler>();
+            var rootState = CreateTestState();
 
             var mockState = new Mock<IState>();
             rootState.AddChild(mockState.Object, "foo");
@@ -77,7 +82,7 @@ namespace RSG.FluentStateMachineTests
         [Fact]
         public void change_to_non_existant_state_throws_exception()
         {
-            var rootState = new State<TestStateHandler>();
+            var rootState = CreateTestState();
 
             Assert.Throws<ApplicationException>(() => rootState.ChangeState("unknown state"));
         }
@@ -85,7 +90,7 @@ namespace RSG.FluentStateMachineTests
         [Fact]
         public void new_state_is_inactive_by_default()
         {
-            var rootState = new State<TestStateHandler>();
+            var rootState = CreateTestState();
 
             var mockState = new Mock<IState>();
             rootState.AddChild(mockState.Object, "foo");
@@ -100,7 +105,7 @@ namespace RSG.FluentStateMachineTests
         [Fact]
         public void updating_root_state_updates_active_child()
         {
-            var rootState = new State<TestStateHandler>();
+            var rootState = CreateTestState();
 
             var mockState = new Mock<IState>();
             rootState.AddChild(mockState.Object, "foo");
@@ -111,29 +116,29 @@ namespace RSG.FluentStateMachineTests
             mockState.Verify(state => state.Update(1.0f), Times.Once());
         }
 
-        [Fact]
-        public void push_state_exits_the_current_state()
-        {
-            var rootState = new State<TestStateHandler>();
+        //[Fact]
+        //public void push_state_exits_the_current_state()
+        //{
+        //    var rootState = CreateTestState();
 
-            var mockState = new Mock<IState>();
-            rootState.AddChild(mockState.Object, "foo");
+        //    var mockState = new Mock<IState>();
+        //    rootState.AddChild(mockState.Object, "foo");
 
-            var stateToPush = new State<TestStateHandler>();
-            rootState.AddChild(stateToPush, "bar");
+        //    var stateToPush = CreateTestState();
+        //    rootState.AddChild(stateToPush, "bar");
 
-            rootState.ChangeState("foo");
-            rootState.PushState("bar");
+        //    rootState.ChangeState("foo");
+        //    rootState.PushState("bar");
 
-            mockState.Verify(state => state.Exit(), Times.Once());
-        }
+        //    mockState.Verify(state => state.Exit(), Times.Once());
+        //}
 
         [Fact]
         public void push_state_enters_new_state()
         {
-            var rootState = new State<TestStateHandler>();
+            var rootState = CreateTestState();
 
-            var childState = new State<TestStateHandler>();
+            var childState = CreateTestState();
             rootState.AddChild(childState, "foo");
 
             var mockStateToPush = new Mock<IState>();
@@ -148,7 +153,7 @@ namespace RSG.FluentStateMachineTests
         [Fact]
         public void push_non_existant_state_throws_exception()
         {
-            var rootState = new State<TestStateHandler>();
+            var rootState = CreateTestState();
 
             Assert.Throws<ApplicationException>(() => rootState.PushState("unknown state"));
         }
@@ -156,10 +161,10 @@ namespace RSG.FluentStateMachineTests
         [Fact]
         public void add_child_with_already_existing_name_throws_exception()
         {
-            var rootState = new State<TestStateHandler>();
+            var rootState = CreateTestState();
 
-            var firstChildState = new State<TestStateHandler>();
-            var secondChildState = new State<TestStateHandler>();
+            var firstChildState = CreateTestState();
+            var secondChildState = CreateTestState();
 
             rootState.AddChild(firstChildState, "test");
 
@@ -169,7 +174,7 @@ namespace RSG.FluentStateMachineTests
         [Fact]
         public void pop_state_exits_the_current_state()
         {
-            var rootState = new State<TestStateHandler>();
+            var rootState = CreateTestState();
 
             var mockState = new Mock<IState>();
             rootState.AddChild(mockState.Object, "foo");
@@ -183,24 +188,63 @@ namespace RSG.FluentStateMachineTests
         [Fact]
         public void pop_state_returns_to_previous_state_in_stack()
         {
-            var rootState = new State<TestStateHandler>();
+            var rootState = CreateTestState();
 
             var mockState = new Mock<IState>();
             rootState.AddChild(mockState.Object, "foo");
-            var pushedState = new State<TestStateHandler>();
+            var pushedState = CreateTestState();
+            rootState.AddChild(pushedState, "bar");
+
+            rootState.ChangeState("foo");
+            rootState.PushState("bar");
+            rootState.Update(1.0f);
+
+            rootState.PopState();
+            rootState.Update(1.0f);
+
+            mockState.Verify(state => state.Update(It.IsAny<float>()), Times.Once());
+        }
+
+        [Fact]
+        public void enter_is_not_triggered_on_states_that_have_already_been_entered()
+        {
+            var rootState = CreateTestState();
+
+            var mockState = new Mock<IState>();
+            rootState.AddChild(mockState.Object, "foo");
+            var pushedState = CreateTestState();
             rootState.AddChild(pushedState, "bar");
 
             rootState.ChangeState("foo");
             rootState.PushState("bar");
             rootState.PopState();
 
-            mockState.Verify(state => state.Enter(), Times.Exactly(2));
+            mockState.Verify(state => state.Enter(), Times.Once());
+        }
+
+        [Fact]
+        public void update_is_only_called_on_top_of_stack()
+        {
+            var rootState = CreateTestState();
+
+            var mockState = new Mock<IState>();
+            var topState = CreateTestState();
+
+            rootState.AddChild(mockState.Object, "foo");
+            rootState.AddChild(topState, "bar");
+
+            rootState.ChangeState("foo");
+            rootState.PushState("bar");
+
+            rootState.Update(1.0f);
+
+            mockState.Verify(m => m.Update(It.IsAny<float>()), Times.Never());
         }
 
         [Fact]
         public void update_is_no_longer_called_on_deactivated_states()
         {
-            var rootState = new State<TestStateHandler>();
+            var rootState = CreateTestState();
 
             var mockState = new Mock<IState>();
             rootState.AddChild(mockState.Object, "foo");
@@ -216,7 +260,7 @@ namespace RSG.FluentStateMachineTests
         [Fact]
         public void condition_is_triggered_on_update()
         {
-            var rootState = new State<TestStateHandler>();
+            var rootState = CreateTestState();
 
             var timesConditionMet = 0;
 
@@ -230,7 +274,7 @@ namespace RSG.FluentStateMachineTests
         [Fact]
         public void condition_is_only_triggered_when_met()
         {
-            var rootState = new State<TestStateHandler>();
+            var rootState = CreateTestState();
 
             var testCondition = false;
             var timesConditionMet = 0;
@@ -244,6 +288,63 @@ namespace RSG.FluentStateMachineTests
             rootState.Update(1.0f);
 
             Assert.Equal(1, timesConditionMet);
+        }
+
+        [Fact]
+        public void update_action_is_only_invoked_on_active_child()
+        {
+            var rootState = CreateTestState();
+            var childState = CreateTestState();
+
+            var updateCalledOnRootState = false;
+            var updateCalledOnChildState = false;
+
+            rootState.SetUpdateAction(_ => updateCalledOnRootState = true);
+            childState.SetUpdateAction(_ => updateCalledOnChildState = true);
+
+            rootState.AddChild(childState, "foo");
+            rootState.PushState("foo");
+
+            rootState.Update(1.0f);
+
+            Assert.False(updateCalledOnRootState);
+            Assert.True(updateCalledOnChildState);
+        }
+        
+        [Fact]
+        public void add_child_without_name_takes_name_from_class_name()
+        {
+            var rootState = CreateTestState();
+            var childState = CreateTestState();
+            rootState.AddChild(childState);
+
+            var timesEnterCalledOnChild = 0;
+
+            childState.SetEnterAction(() => timesEnterCalledOnChild++);
+
+            rootState.PushState(childState.GetType().Name);
+
+            Assert.Equal(1, timesEnterCalledOnChild);
+        }
+
+        [Fact]
+        public void exiting_state_exits_all_children()
+        {
+            var rootState = CreateTestState();
+
+            var mockState1 = new Mock<IState>();
+            var mockState2 = new Mock<IState>();
+
+            rootState.AddChild(mockState1.Object, "foo");
+            rootState.AddChild(mockState2.Object, "bar");
+
+            rootState.PushState("foo");
+            rootState.PushState("bar");
+
+            rootState.Exit();
+
+            mockState1.Verify(m => m.Exit(), Times.Once());
+            mockState2.Verify(m => m.Exit(), Times.Once());
         }
     }
 }

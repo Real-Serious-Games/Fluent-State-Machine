@@ -31,22 +31,22 @@ namespace RSG
         /// <summary>
         /// Set an action to be called when we enter the state.
         /// </summary>
-        IStateBuilder<T, TParent> Enter(Action<IState<T>> onEnter);
+        IStateBuilder<T, TParent> Enter(Action onEnter);
 
         /// <summary>
         /// Set an action to be called when we exit the state.
         /// </summary>
-        IStateBuilder<T, TParent> Exit(Action<IState<T>> onExit);
+        IStateBuilder<T, TParent> Exit(Action onExit);
 
         /// <summary>
         /// Set an action to be called when we update the state.
         /// </summary>
-        IStateBuilder<T, TParent> Update(Action<IState<T>, float> onUpdate);
+        IStateBuilder<T, TParent> Update(Action<float> onUpdate);
 
         /// <summary>
         /// Set an action to be called on update when a condition is true.
         /// </summary>
-        IStateBuilder<T, TParent> Condition(Expression<Func<bool>> predicate, Action<IState<T>> action);
+        IStateBuilder<T, TParent> Condition(Expression<Func<bool>> predicate, Action action);
 
         /// <summary>
         /// Finalise the current state and return the builder for its parent.
@@ -57,7 +57,6 @@ namespace RSG
 
     class StateBuilder<T, TParent> : IStateBuilder<T, TParent>
     {
-
         public IStateBuilder<NewStateT, T> State<NewStateT>()
         {
             throw new NotImplementedException();
@@ -68,22 +67,22 @@ namespace RSG
             throw new NotImplementedException();
         }
 
-        public IStateBuilder<T, TParent> Enter(Action<IState<T>> onEnter)
+        public IStateBuilder<T, TParent> Enter(Action onEnter)
         {
             throw new NotImplementedException();
         }
 
-        public IStateBuilder<T, TParent> Exit(Action<IState<T>> onExit)
+        public IStateBuilder<T, TParent> Exit(Action onExit)
         {
             throw new NotImplementedException();
         }
 
-        public IStateBuilder<T, TParent> Update(Action<IState<T>, float> onUpdate)
+        public IStateBuilder<T, TParent> Update(Action<float> onUpdate)
         {
             throw new NotImplementedException();
         }
 
-        public IStateBuilder<T, TParent> Condition(Expression<Func<bool>> predicate, Action<IState<T>> action)
+        public IStateBuilder<T, TParent> Condition(Expression<Func<bool>> predicate, Action action)
         {
             throw new NotImplementedException();
         }

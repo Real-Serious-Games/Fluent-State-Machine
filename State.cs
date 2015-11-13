@@ -49,32 +49,13 @@ namespace RSG
     }
 
     /// <summary>
-    /// Generic state with a handler class.
-    /// </summary>
-    public interface IState<T> : IState
-    {
-        /// <summary>
-        /// State handler class.
-        /// </summary>
-        T Handler { get; }
-    }
-
-    /// <summary>
     /// State with a specified handler type.
     /// </summary>
-    public class State<T> : IState<T>
+    public abstract class AbstractState : IState
     {
-        public State()
-        {
-            Children = new Dictionary<string, IState>();
-            ActiveChildren = new Stack<IState>();
-        }
-
-        public T Handler { get; private set; }
-
-        private Action<IState<T>> onEnter;
-        private Action<IState<T>, float> onUpdate;
-        private Action<IState<T>> onExit;
+        private Action onEnter;
+        private Action<float> onUpdate;
+        private Action onExit;
 
         private IList<Condition> conditions = new List<Condition>();
 
@@ -86,12 +67,12 @@ namespace RSG
         /// <summary>
         /// Stack of active child states.
         /// </summary>
-        private Stack<IState> ActiveChildren { get; set; }
+        private Stack<IState> activeChildren = new Stack<IState>();
 
         /// <summary>
         /// Dictionary of all children (active and inactive), and their names.
         /// </summary>
-        private IDictionary<string, IState> Children { get; set; }
+        private IDictionary<string, IState> children = new Dictionary<string, IState>();
 
         /// <summary>
         /// Pops the current state from the stack and pushes the specified one on.
@@ -99,16 +80,16 @@ namespace RSG
         public void ChangeState(string stateName)
         {
             // Exit and pop the current state
-            if (ActiveChildren.Count > 0)
+            if (activeChildren.Count > 0)
             {
-                ActiveChildren.Pop().Exit();
+                activeChildren.Pop().Exit();
             }
 
             // Find the new state and add it
             try
             {
-                var newState = Children[stateName];
-                ActiveChildren.Push(newState);
+                var newState = children[stateName];
+                activeChildren.Push(newState);
                 newState.Enter();
             }
             catch (KeyNotFoundException)
@@ -122,17 +103,11 @@ namespace RSG
         /// </summary>
         public void PushState(string stateName)
         {
-            // Exit the current state
-            if (ActiveChildren.Count > 0)
-            {
-                ActiveChildren.Peek().Exit();
-            }
-
             // Find the new state and add it
             try
             {
-                var newState = Children[stateName];
-                ActiveChildren.Push(newState);
+                var newState = children[stateName];
+                activeChildren.Push(newState);
                 newState.Enter();
             }
             catch (KeyNotFoundException)
@@ -147,41 +122,38 @@ namespace RSG
         public void PopState()
         {
             // Exit and pop the current state
-            if (ActiveChildren.Count > 0)
+            if (activeChildren.Count > 0)
             {
-                ActiveChildren.Pop().Exit();
-            }
-
-            // Activate the next state down, if there is one
-            if (ActiveChildren.Count > 0)
-            {
-                ActiveChildren.Peek().Enter();
+                activeChildren.Pop().Exit();
             }
         }
 
         /// <summary>
         /// Update this state and its children with a specified delta time.
         /// </summary>
-        public virtual void Update(float deltaTime)
+        public void Update(float deltaTime)
         {
-            if (onUpdate != null)
+            // Only update the child at the end of the tree
+            if (activeChildren.Count == 0)
             {
-                onUpdate.Invoke(this, deltaTime);
-            }
-
-            // Update conditions
-            foreach (var conditon in conditions)
-            {
-                if (conditon.Predicate.Compile().Invoke())
+                if (onUpdate != null)
                 {
-                    conditon.Action.Invoke(this);
+                    onUpdate.Invoke(deltaTime);
                 }
-            }
 
-            // Update children
-            if (ActiveChildren.Count > 0)
+                // Update conditions
+                foreach (var conditon in conditions)
+                {
+                    if (conditon.Predicate.Compile().Invoke())
+                    {
+                        conditon.Action.Invoke(this);
+                    }
+                }
+
+            }
+            else
             {
-                ActiveChildren.Peek().Update(deltaTime);
+                activeChildren.Peek().Update(deltaTime);
             }
         }
 
@@ -192,7 +164,7 @@ namespace RSG
         {
             try
             {
-                Children.Add(stateName, newState);
+                children.Add(stateName, newState);
                 newState.Parent = this;
             }
             catch (ArgumentException)
@@ -207,16 +179,17 @@ namespace RSG
         /// </summary>
         public void AddChild(IState newState)
         {
-            throw new NotImplementedException();
+            var name = newState.GetType().Name;
+            this.AddChild(newState, name);
         }
 
         private struct Condition
         {
             public Expression<Func<bool>> Predicate;
-            public Action<IState<T>> Action;
+            public Action<IState> Action;
         }
 
-        public void SetCondition(Expression<Func<bool>> predicate, Action<IState<T>> action)
+        public void SetCondition(Expression<Func<bool>> predicate, Action<IState> action)
         {
             conditions.Add(new Condition() {
                 Predicate = predicate,
@@ -227,7 +200,7 @@ namespace RSG
         /// <summary>
         /// Action triggered on entering the state.
         /// </summary>
-        public void SetEnterAction(Action<IState<T>> onEnter)
+        public void SetEnterAction(Action onEnter)
         {
             this.onEnter = onEnter;
         }
@@ -235,7 +208,7 @@ namespace RSG
         /// <summary>
         /// Action triggered on exiting the state.
         /// </summary>
-        public void SetExitAction(Action<IState<T>> onExit)
+        public void SetExitAction(Action onExit)
         {
             this.onExit = onExit;
         }
@@ -244,7 +217,7 @@ namespace RSG
         /// Action which passes the current state object and the delta time since the 
         /// last update to a function.
         /// </summary>
-        public void SetUpdateAction(Action<IState<T>, float> onUpdate)
+        public void SetUpdateAction(Action<float> onUpdate)
         {
             this.onUpdate = onUpdate;
         }
@@ -256,7 +229,7 @@ namespace RSG
         {
             if (onEnter != null)
             {
-                onEnter.Invoke(this);
+                onEnter.Invoke();
             }
         }
 
@@ -267,7 +240,12 @@ namespace RSG
         {
             if (onExit != null)
             {
-                onExit.Invoke(this);
+                onExit.Invoke();
+            }
+
+            while (activeChildren.Count > 0)
+            {
+                activeChildren.Pop().Exit();
             }
         }
     }
