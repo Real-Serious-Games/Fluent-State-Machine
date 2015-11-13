@@ -60,15 +60,31 @@ namespace RSG
     }
 
     /// <summary>
-    /// Abstract class with features common to both typed (generic) and non-typed states.
+    /// Dummy handler class for the root state.
     /// </summary>
-    public abstract class AbstractState : IState
+    public class RootStateHandler
     {
-        public AbstractState()
+
+    }
+
+    /// <summary>
+    /// State with a specified handler type.
+    /// </summary>
+    public class State<T> : IState<T>
+    {
+        public State()
         {
             Children = new Dictionary<string, IState>();
             ActiveChildren = new Stack<IState>();
         }
+
+        public T Handler { get; private set; }
+
+        private Action<IState<T>> onEnter;
+        private Action<IState<T>, float> onUpdate;
+        private Action<IState<T>> onExit;
+
+        private IList<Condition> conditions = new List<Condition>();
 
         /// <summary>
         /// Parent state, or null if this is the root level state.
@@ -156,6 +172,11 @@ namespace RSG
         /// </summary>
         public virtual void Update(float deltaTime)
         {
+            if (onUpdate != null)
+            {
+                onUpdate.Invoke(this, deltaTime);
+            }
+
             // Update conditions
             foreach (var conditon in conditions)
             {
@@ -171,16 +192,6 @@ namespace RSG
                 ActiveChildren.Peek().Update(deltaTime);
             }
         }
-
-        /// <summary>
-        /// Triggered when we enter the state.
-        /// </summary>
-        public abstract void Enter();
-
-        /// <summary>
-        /// Triggered when we exit the state.
-        /// </summary>
-        public abstract void Exit();
 
         /// <summary>
         /// Create a new state as a child of the current state.
@@ -210,33 +221,21 @@ namespace RSG
         private struct Condition
         {
             public Expression<Func<bool>> Predicate;
-            public Action<IState> Action;
+            public Action<IState<T>> Action;
         }
 
-        private IList<Condition> conditions = new List<Condition>();
-
-        public void SetCondition(Expression<Func<bool>> predicate, Action<IState> action)
+        public void SetCondition(Expression<Func<bool>> predicate, Action<IState<T>> action)
         {
             conditions.Add(new Condition() {
                 Predicate = predicate,
                 Action = action
             });
         }
-    }
-
-    /// <summary>
-    /// Non-typed state class.
-    /// </summary>
-    public class State : AbstractState
-    {
-        private Action<IState> onEnter;
-        private Action<IState, float> onUpdate;
-        private Action<IState> onExit;
 
         /// <summary>
         /// Action triggered on entering the state.
         /// </summary>
-        public void SetEnterAction(Action<IState> onEnter)
+        public void SetEnterAction(Action<IState<T>> onEnter)
         {
             this.onEnter = onEnter;
         }
@@ -244,7 +243,7 @@ namespace RSG
         /// <summary>
         /// Action triggered on exiting the state.
         /// </summary>
-        public void SetExitAction(Action<IState> onExit)
+        public void SetExitAction(Action<IState<T>> onExit)
         {
             this.onExit = onExit;
         }
@@ -253,25 +252,15 @@ namespace RSG
         /// Action which passes the current state object and the delta time since the 
         /// last update to a function.
         /// </summary>
-        public void SetUpdateAction(Action<IState, float> onUpdate)
+        public void SetUpdateAction(Action<IState<T>, float> onUpdate)
         {
             this.onUpdate = onUpdate;
-        }
-
-        public override void Update(float deltaTime)
-        {
-            if (onUpdate != null)
-            {
-                onUpdate.Invoke(this, deltaTime);
-            }
-
-            base.Update(deltaTime);
         }
 
         /// <summary>
         /// Triggered when we enter the state.
         /// </summary>
-        public override void Enter()
+        public void Enter()
         {
             if (onEnter != null)
             {
@@ -282,61 +271,12 @@ namespace RSG
         /// <summary>
         /// Triggered when we exit the state.
         /// </summary>
-        public override void Exit()
+        public void Exit()
         {
             if (onExit != null)
             {
                 onExit.Invoke(this);
             }
-        }
-    }
-
-    /// <summary>
-    /// State with a specified handler type.
-    /// </summary>
-    public class State<T> : AbstractState, IState<T>
-    {
-        public T Handler { get; private set; }
-
-        /// <summary>
-        /// Action triggered on entering the state.
-        /// </summary>
-        public void SetEnterAction(Action<IState<T>> onEnter)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Action triggered on exiting the state.
-        /// </summary>
-        public void SetExitAction(Action<IState<T>> onExit)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Action which passes the current state object and the delta time since the 
-        /// last update to a function.
-        /// </summary>
-        public void SetUpdateAction(Action<IState<T>, float> onUpdate)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Triggered when we enter the state.
-        /// </summary>
-        public override void Enter()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Triggered when we exit the state.
-        /// </summary>
-        public override void Exit()
-        {
-            throw new NotImplementedException();
         }
     }
 }
