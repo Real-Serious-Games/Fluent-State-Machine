@@ -9,7 +9,7 @@ namespace RSG
     /// <summary>
     /// Builder providing a fluent API for constructing states.
     /// </summary>
-    public interface IStateBuilder<T, TParent>
+    public interface IStateBuilder<T, TParent> where T : AbstractState
     {
         /// <summary>
         /// Create a child state with a specified handler type. The state will take the
@@ -17,7 +17,7 @@ namespace RSG
         /// </summary>
         /// <typeparam name="NewStateT">Handler type for the new state</typeparam>
         /// <returns>A new state builder object for the new child state</returns>
-        IStateBuilder<NewStateT, T> State<NewStateT>();
+        IStateBuilder<NewStateT, T> State<NewStateT>() where NewStateT : AbstractState;
 
         /// <summary>
         /// Create a named child state with a specified handler type.
@@ -26,7 +26,7 @@ namespace RSG
         /// <param name="name">String for identifying state in parent</param>
         /// <returns></returns>
         /// <returns>A new state builder object for the new child state</returns>
-        IStateBuilder<NewStateT, T> State<NewStateT>(string name);
+        IStateBuilder<NewStateT, T> State<NewStateT>(string name) where NewStateT : AbstractState;
 
         /// <summary>
         /// Set an action to be called when we enter the state.
@@ -55,14 +55,26 @@ namespace RSG
         TParent End();
     }
 
-    class StateBuilder<T, TParent> : IStateBuilder<T, TParent>
+    class StateBuilder<T, TParent> : IStateBuilder<T, TParent> where T : AbstractState
     {
-        public IStateBuilder<NewStateT, T> State<NewStateT>()
+        TParent parentClass;
+
+        AbstractState state;
+
+        public StateBuilder(TParent parentClass)
+        {
+            this.parentClass = parentClass;
+
+            // New-up state of the prescrbed type.
+            //state = new 
+        }
+
+        public IStateBuilder<NewStateT, T> State<NewStateT>() where NewStateT : AbstractState
         {
             throw new NotImplementedException();
         }
 
-        public IStateBuilder<NewStateT, T> State<NewStateT>(string name)
+        public IStateBuilder<NewStateT, T> State<NewStateT>(string name) where NewStateT : AbstractState
         {
             throw new NotImplementedException();
         }

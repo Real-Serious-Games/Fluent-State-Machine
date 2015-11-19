@@ -10,12 +10,12 @@ namespace RSG
     /// </summary>
     public class StateMachineBuilder
     {
-        public IStateBuilder<T, StateMachineBuilder> State<T>()
+        public IStateBuilder<T, StateMachineBuilder> State<T>() where T : AbstractState
         {
             throw new NotImplementedException();
         }
 
-        public IStateBuilder<T, StateMachineBuilder> State<T>(string stateName)
+        public IStateBuilder<T, StateMachineBuilder> State<T>(string stateName) where T : AbstractState
         {
             throw new NotImplementedException();
         }
