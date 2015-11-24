@@ -10,19 +10,28 @@ namespace RSG
     /// </summary>
     public class StateMachineBuilder
     {
-        public IStateBuilder<T, StateMachineBuilder> State<T>() where T : AbstractState
+        private State rootState;
+
+        public StateMachineBuilder()
+        {
+            rootState = new State();
+        }
+
+        public IStateBuilder<T, StateMachineBuilder> State<T>() where T : AbstractState, new()
         {
             throw new NotImplementedException();
         }
 
-        public IStateBuilder<T, StateMachineBuilder> State<T>(string stateName) where T : AbstractState
+        public IStateBuilder<T, StateMachineBuilder> State<T>(string stateName) where T : AbstractState, new()
         {
-            throw new NotImplementedException();
+            var builder = new StateBuilder<T, StateMachineBuilder>(this);
+            rootState.AddChild(builder.state, stateName);
+            return builder;
         }
 
         public IState Build()
         {
-            throw new NotImplementedException();
+            return rootState;
         }
     }
 }

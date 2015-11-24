@@ -33,7 +33,7 @@ namespace RSG.FluentStateMachineTests
             var state = CreateTestState();
 
             var timesUpdateCalled = 0;
-            state.SetUpdateAction((st, dt) => timesUpdateCalled++);
+            state.SetUpdateAction(dt => timesUpdateCalled++);
 
             state.Update(1.0f);
 
@@ -46,7 +46,7 @@ namespace RSG.FluentStateMachineTests
             var state = CreateTestState();
 
             var timesEnterCalled = 0;
-            state.SetEnterAction(_ => timesEnterCalled++);
+            state.SetEnterAction(() => timesEnterCalled++);
 
             state.Enter();
 
@@ -59,67 +59,11 @@ namespace RSG.FluentStateMachineTests
             var state = CreateTestState();
 
             var timesExitCalled = 0;
-            state.SetExitAction(_ => timesExitCalled++);
+            state.SetExitAction(() => timesExitCalled++);
 
             state.Exit();
 
             Assert.Equal(1, timesExitCalled);
-        }
-
-        [Fact]
-        public void state_is_passed_into_enter_action()
-        {
-            var state = CreateTestState();
-
-            IState statePassedIn = null;
-
-            state.SetEnterAction(st => statePassedIn = st);
-
-            state.Enter();
-
-            Assert.Equal(state, statePassedIn);
-        }
-
-        [Fact]
-        public void state_is_passed_into_update_action()
-        {
-            var state = CreateTestState();
-
-            IState statePassedIn = null;
-
-            state.SetUpdateAction((st, dt) => statePassedIn = st);
-
-            state.Update(1.0f);
-
-            Assert.Equal(state, statePassedIn);
-        }
-
-        [Fact]
-        public void state_is_passed_into_exit_action()
-        {
-            var state = CreateTestState();
-
-            IState statePassedIn = null;
-
-            state.SetExitAction(st => statePassedIn = st);
-
-            state.Exit();
-
-            Assert.Equal(state, statePassedIn);
-        }
-
-        [Fact]
-        public void state_is_passed_into_condition()
-        {
-            var state = CreateTestState();
-
-            IState statePassedIn = null;
-
-            state.SetCondition(() => true, st => statePassedIn = st);
-
-            state.Update(1f);
-
-            Assert.Equal(state, statePassedIn);
         }
 
         [Fact]
@@ -130,7 +74,7 @@ namespace RSG.FluentStateMachineTests
             var expectedDelta = 123f;
             var actualDelta = -1f;
 
-            state.SetUpdateAction((_, dt) => actualDelta = dt);
+            state.SetUpdateAction(dt => actualDelta = dt);
 
             state.Update(expectedDelta);
 
@@ -370,8 +314,8 @@ namespace RSG.FluentStateMachineTests
             var updateCalledOnRootState = false;
             var updateCalledOnChildState = false;
 
-            rootState.SetUpdateAction((state, dt) => updateCalledOnRootState = true);
-            childState.SetUpdateAction((state, dt) => updateCalledOnChildState = true);
+            rootState.SetUpdateAction(dt => updateCalledOnRootState = true);
+            childState.SetUpdateAction(dt => updateCalledOnChildState = true);
 
             rootState.AddChild(childState, "foo");
             rootState.PushState("foo");
@@ -391,7 +335,7 @@ namespace RSG.FluentStateMachineTests
 
             var timesEnterCalledOnChild = 0;
 
-            childState.SetEnterAction(_ => timesEnterCalledOnChild++);
+            childState.SetEnterAction(() => timesEnterCalledOnChild++);
 
             rootState.PushState(childState.GetType().Name);
 

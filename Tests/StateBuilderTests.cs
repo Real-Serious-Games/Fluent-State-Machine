@@ -49,5 +49,63 @@ namespace RSG.FluentStateMachineTests
         {
             throw new NotImplementedException();
         }
+
+        /*
+        [Fact]
+        public void state_is_passed_into_enter_action()
+        {
+            var state = CreateTestState();
+
+            IState statePassedIn = null;
+
+            state.SetEnterAction(st => statePassedIn = st);
+
+            state.Enter();
+
+            Assert.Equal(state, statePassedIn);
+        }
+
+        [Fact]
+        public void state_is_passed_into_update_action()
+        {
+            var state = CreateTestState();
+
+            IState statePassedIn = null;
+
+            state.SetUpdateAction((st, dt) => statePassedIn = st);
+
+            state.Update(1.0f);
+
+            Assert.Equal(state, statePassedIn);
+        }
+
+        [Fact]
+        public void state_is_passed_into_exit_action()
+        {
+            var state = CreateTestState();
+
+            IState statePassedIn = null;
+
+            state.SetExitAction(st => statePassedIn = st);
+
+            state.Exit();
+
+            Assert.Equal(state, statePassedIn);
+        }
+
+        [Fact]
+        public void state_is_passed_into_condition()
+        {
+            var state = CreateTestState();
+
+            IState statePassedIn = null;
+
+            state.SetCondition(() => true, st => statePassedIn = st);
+
+            state.Update(1f);
+
+            Assert.Equal(state, statePassedIn);
+        }
+        */
     }
 }

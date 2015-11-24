@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="StateBuilderTests.cs" />
+    <Compile Include="StateMachineBuilderTests.cs" />
     <Compile Include="StateTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
