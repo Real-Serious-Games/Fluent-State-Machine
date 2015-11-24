@@ -53,9 +53,9 @@ namespace RSG
     /// </summary>
     public abstract class AbstractState : IState
     {
-        private Action onEnter;
-        private Action<float> onUpdate;
-        private Action onExit;
+        private Action<IState> onEnter;
+        private Action<IState, float> onUpdate;
+        private Action<IState> onExit;
 
         private IList<Condition> conditions = new List<Condition>();
 
@@ -135,7 +135,7 @@ namespace RSG
             {
                 if (onUpdate != null)
                 {
-                    onUpdate.Invoke(deltaTime);
+                    onUpdate(this, deltaTime);
                 }
 
                 // Update conditions
@@ -197,7 +197,7 @@ namespace RSG
         /// <summary>
         /// Action triggered on entering the state.
         /// </summary>
-        public void SetEnterAction(Action onEnter)
+        public void SetEnterAction(Action<IState> onEnter)
         {
             this.onEnter = onEnter;
         }
@@ -205,7 +205,7 @@ namespace RSG
         /// <summary>
         /// Action triggered on exiting the state.
         /// </summary>
-        public void SetExitAction(Action onExit)
+        public void SetExitAction(Action<IState> onExit)
         {
             this.onExit = onExit;
         }
@@ -214,7 +214,7 @@ namespace RSG
         /// Action which passes the current state object and the delta time since the 
         /// last update to a function.
         /// </summary>
-        public void SetUpdateAction(Action<float> onUpdate)
+        public void SetUpdateAction(Action<IState, float> onUpdate)
         {
             this.onUpdate = onUpdate;
         }
@@ -226,7 +226,7 @@ namespace RSG
         {
             if (onEnter != null)
             {
-                onEnter.Invoke();
+                onEnter(this);
             }
         }
 
@@ -237,7 +237,7 @@ namespace RSG
         {
             if (onExit != null)
             {
-                onExit.Invoke();
+                onExit(this);
             }
 
             while (activeChildren.Count > 0)
