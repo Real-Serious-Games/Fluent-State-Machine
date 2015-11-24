@@ -104,16 +104,13 @@ namespace RSG
         public void PushState(string stateName)
         {
             // Find the new state and add it
-            try
-            {
-                var newState = children[stateName];
-                activeChildren.Push(newState);
-                newState.Enter();
-            }
-            catch (KeyNotFoundException)
+            IState newState;
+            if (!children.TryGetValue(stateName, out newState))
             {
                 throw new ApplicationException("Tried to change to state \"" + stateName + "\", but it is not in the list of children.");
             }
+            activeChildren.Push(newState);
+            newState.Enter();
         }
 
         /// <summary>
@@ -144,9 +141,9 @@ namespace RSG
                 // Update conditions
                 foreach (var conditon in conditions)
                 {
-                    if (conditon.Predicate.Compile().Invoke())
+                    if (conditon.Predicate())
                     {
-                        conditon.Action.Invoke(this);
+                        conditon.Action(this);
                     }
                 }
 
@@ -185,11 +182,11 @@ namespace RSG
 
         private struct Condition
         {
-            public Expression<Func<bool>> Predicate;
+            public Func<bool> Predicate;
             public Action<IState> Action;
         }
 
-        public void SetCondition(Expression<Func<bool>> predicate, Action<IState> action)
+        public void SetCondition(Func<bool> predicate, Action<IState> action)
         {
             conditions.Add(new Condition() {
                 Predicate = predicate,
@@ -248,5 +245,13 @@ namespace RSG
                 activeChildren.Pop().Exit();
             }
         }
+    }
+
+    /// <summary>
+    /// State with no extra functionality used for root of state hierarchy.
+    /// </summary>
+    public class State : AbstractState
+    {
+
     }
 }

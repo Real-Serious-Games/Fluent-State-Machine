@@ -46,7 +46,7 @@ namespace RSG
         /// <summary>
         /// Set an action to be called on update when a condition is true.
         /// </summary>
-        IStateBuilder<T, TParent> Condition(Expression<Func<bool>> predicate, Action action);
+        IStateBuilder<T, TParent> Condition(Func<bool> predicate, Action action);
 
         /// <summary>
         /// Finalise the current state and return the builder for its parent.
@@ -94,7 +94,7 @@ namespace RSG
             throw new NotImplementedException();
         }
 
-        public IStateBuilder<T, TParent> Condition(Expression<Func<bool>> predicate, Action action)
+        public IStateBuilder<T, TParent> Condition(Func<bool> predicate, Action action)
         {
             throw new NotImplementedException();
         }
