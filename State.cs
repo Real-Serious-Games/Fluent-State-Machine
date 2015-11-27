@@ -53,8 +53,19 @@ namespace RSG
     /// </summary>
     public abstract class AbstractState : IState
     {
+        /// <summary>
+        /// Action called when we enter the state.
+        /// </summary>
         private Action onEnter;
+
+        /// <summary>
+        /// Action called when the state gets updated.
+        /// </summary>
         private Action<float> onUpdate;
+
+        /// <summary>
+        /// Action called when we exit the state.
+        /// </summary>
         private Action onExit;
 
         private IList<Condition> conditions = new List<Condition>();
