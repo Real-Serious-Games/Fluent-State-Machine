@@ -279,7 +279,7 @@ namespace RSG.FluentStateMachineTests
 
             var timesConditionMet = 0;
 
-            rootState.SetCondition(() => true, state => timesConditionMet++);
+            rootState.SetCondition(() => true, () => timesConditionMet++);
 
             rootState.Update(1.0f);
 
@@ -294,7 +294,7 @@ namespace RSG.FluentStateMachineTests
             var testCondition = false;
             var timesConditionMet = 0;
 
-            rootState.SetCondition(() => testCondition, state => timesConditionMet++);
+            rootState.SetCondition(() => testCondition, () => timesConditionMet++);
 
             rootState.Update(1.0f);
 

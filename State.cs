@@ -146,7 +146,7 @@ namespace RSG
             {
                 if (onUpdate != null)
                 {
-                    onUpdate.Invoke(deltaTime);
+                    onUpdate(deltaTime);
                 }
 
                 // Update conditions
@@ -154,7 +154,7 @@ namespace RSG
                 {
                     if (conditon.Predicate())
                     {
-                        conditon.Action(this);
+                        conditon.Action();
                     }
                 }
 
@@ -194,10 +194,10 @@ namespace RSG
         private struct Condition
         {
             public Func<bool> Predicate;
-            public Action<IState> Action;
+            public Action Action;
         }
 
-        public void SetCondition(Func<bool> predicate, Action<IState> action)
+        public void SetCondition(Func<bool> predicate, Action action)
         {
             conditions.Add(new Condition() {
                 Predicate = predicate,
@@ -237,7 +237,7 @@ namespace RSG
         {
             if (onEnter != null)
             {
-                onEnter.Invoke();
+                onEnter();
             }
         }
 
@@ -248,7 +248,7 @@ namespace RSG
         {
             if (onExit != null)
             {
-                onExit.Invoke();
+                onExit();
             }
 
             while (activeChildren.Count > 0)
