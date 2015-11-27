@@ -19,14 +19,12 @@ namespace RSG
 
         public IStateBuilder<T, StateMachineBuilder> State<T>() where T : AbstractState, new()
         {
-            throw new NotImplementedException();
+            return new StateBuilder<T, StateMachineBuilder>(this, rootState);
         }
 
         public IStateBuilder<T, StateMachineBuilder> State<T>(string stateName) where T : AbstractState, new()
         {
-            var builder = new StateBuilder<T, StateMachineBuilder>(this);
-            rootState.AddChild(builder.state, stateName);
-            return builder;
+            return new StateBuilder<T, StateMachineBuilder>(this, rootState, stateName);
         }
 
         public IState Build()

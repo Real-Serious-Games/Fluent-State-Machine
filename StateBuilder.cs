@@ -86,7 +86,7 @@ namespace RSG
         /// <returns>A new state builder object for the new child state</returns>
         public IStateBuilder<NewStateT, IStateBuilder<T, TParent>> State<NewStateT>() where NewStateT : AbstractState, new()
         {
-            throw new NotImplementedException();
+            return new StateBuilder<NewStateT, IStateBuilder<T, TParent>>(this, state);
         }
 
         /// <summary>
@@ -94,11 +94,10 @@ namespace RSG
         /// </summary>
         /// <typeparam name="NewStateT">Handler type for the new state</typeparam>
         /// <param name="name">String for identifying state in parent</param>
-        /// <returns></returns>
         /// <returns>A new state builder object for the new child state</returns>
         public IStateBuilder<NewStateT, IStateBuilder<T, TParent>> State<NewStateT>(string name) where NewStateT : AbstractState, new()
         {
-            throw new NotImplementedException();
+            return new StateBuilder<NewStateT, IStateBuilder<T, TParent>>(this, state, name);
         }
 
         /// <summary>
@@ -116,7 +115,9 @@ namespace RSG
         /// </summary>
         public IStateBuilder<T, TParent> Exit(Action<T> onExit)
         {
-            throw new NotImplementedException();
+            state.SetEnterAction(() => onExit(state));
+
+            return this;
         }
 
         /// <summary>
@@ -124,7 +125,9 @@ namespace RSG
         /// </summary>
         public IStateBuilder<T, TParent> Update(Action<T, float> onUpdate)
         {
-            throw new NotImplementedException();
+            state.SetUpdateAction(dt => onUpdate(state, dt));
+
+            return this;
         }
 
         /// <summary>
@@ -132,7 +135,9 @@ namespace RSG
         /// </summary>
         public IStateBuilder<T, TParent> Condition(Func<bool> predicate, Action<T> action)
         {
-            throw new NotImplementedException();
+            state.SetCondition(predicate, () => action(state));
+
+            return this;
         }
 
         /// <summary>
