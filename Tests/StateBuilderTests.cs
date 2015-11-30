@@ -112,7 +112,23 @@ namespace RSG.FluentStateMachineTests
         [Fact]
         public void condition_sets_action_for_condition()
         {
-            throw new NotImplementedException();
+            var condition = false;
+            var timesConditionActionCalled = 0;
+
+            var rootState = new StateMachineBuilder()
+                .State<TestState>("foo")
+                    .Condition(() => condition, _ => timesConditionActionCalled++)
+                .End()
+                .Build();
+            rootState.ChangeState("foo");
+
+            rootState.Update(1f);
+
+            condition = true;
+
+            rootState.Update(1f);
+
+            Assert.Equal(1, timesConditionActionCalled);
         }
 
         //[Fact]
