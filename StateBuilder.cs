@@ -24,7 +24,6 @@ namespace RSG
         /// </summary>
         /// <typeparam name="NewStateT">Handler type for the new state</typeparam>
         /// <param name="name">String for identifying state in parent</param>
-        /// <returns></returns>
         /// <returns>A new state builder object for the new child state</returns>
         IStateBuilder<NewStateT, IStateBuilder<T, TParent>> State<NewStateT>(string name) where NewStateT : AbstractState, new();
 
@@ -54,12 +53,27 @@ namespace RSG
         TParent End();
     }
 
+    /// <summary>
+    /// Builder providing a fluent API for constructing states.
+    /// </summary>
     public class StateBuilder<T, TParent> : IStateBuilder<T, TParent> where T : AbstractState, new()
     {
+        /// <summary>
+        /// Class to return when we call .End()
+        /// </summary>
         TParent parentClass;
 
+        /// <summary>
+        /// The current state we're building.
+        /// </summary>
         private T state;
 
+        /// <summary>
+        /// Create a new state builder with a specified parent state and parent builder.
+        /// </summary>
+        /// <param name="parentClass">The parent builder, or what we will return 
+        /// when .End is called.</param>
+        /// <param name="parentState">The parent of the new state to create.</param>
         public StateBuilder(TParent parentClass, AbstractState parentState)
         {
             this.parentClass = parentClass;
@@ -69,6 +83,13 @@ namespace RSG
             parentState.AddChild(state);
         }
 
+        /// <summary>
+        /// Create a new state builder with a specified parent state, parent builder,
+        /// and name for the new state.
+        /// </summary>
+        /// <param name="parentClass">The parent builder, or what we will return 
+        /// when .End is called.</param>
+        /// <param name="parentState">The parent of the new state to create.</param>
         public StateBuilder(TParent parentClass, AbstractState parentState, string name)
         {
             this.parentClass = parentClass;

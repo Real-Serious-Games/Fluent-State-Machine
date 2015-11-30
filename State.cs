@@ -191,12 +191,19 @@ namespace RSG
             this.AddChild(newState, name);
         }
 
+        /// <summary>
+        /// Data structure for associating a condition with an action.
+        /// </summary>
         private struct Condition
         {
             public Func<bool> Predicate;
             public Action Action;
         }
 
+        /// <summary>
+        /// Set an action to be called when the state is updated an a specified 
+        /// predicate is true.
+        /// </summary>
         public void SetCondition(Func<bool> predicate, Action action)
         {
             conditions.Add(new Condition() {
@@ -263,6 +270,5 @@ namespace RSG
     /// </summary>
     public class State : AbstractState
     {
-
     }
 }
