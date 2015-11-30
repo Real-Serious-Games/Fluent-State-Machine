@@ -56,12 +56,13 @@ namespace RSG
     /// <summary>
     /// Builder providing a fluent API for constructing states.
     /// </summary>
-    public class StateBuilder<T, TParent> : IStateBuilder<T, TParent> where T : AbstractState, new()
+    public class StateBuilder<T, TParent> : IStateBuilder<T, TParent> 
+        where T : AbstractState, new()
     {
         /// <summary>
         /// Class to return when we call .End()
         /// </summary>
-        TParent parentClass;
+        TParent parentBuilder;
 
         /// <summary>
         /// The current state we're building.
@@ -71,12 +72,12 @@ namespace RSG
         /// <summary>
         /// Create a new state builder with a specified parent state and parent builder.
         /// </summary>
-        /// <param name="parentClass">The parent builder, or what we will return 
+        /// <param name="parentBuilder">The parent builder, or what we will return 
         /// when .End is called.</param>
         /// <param name="parentState">The parent of the new state to create.</param>
-        public StateBuilder(TParent parentClass, AbstractState parentState)
+        public StateBuilder(TParent parentBuilder, AbstractState parentState)
         {
-            this.parentClass = parentClass;
+            this.parentBuilder = parentBuilder;
 
             // New-up state of the prescrbed type.
             state = new T();
@@ -87,12 +88,12 @@ namespace RSG
         /// Create a new state builder with a specified parent state, parent builder,
         /// and name for the new state.
         /// </summary>
-        /// <param name="parentClass">The parent builder, or what we will return 
+        /// <param name="parentBuilder">The parent builder, or what we will return 
         /// when .End is called.</param>
         /// <param name="parentState">The parent of the new state to create.</param>
-        public StateBuilder(TParent parentClass, AbstractState parentState, string name)
+        public StateBuilder(TParent parentBuilder, AbstractState parentState, string name)
         {
-            this.parentClass = parentClass;
+            this.parentBuilder = parentBuilder;
 
             // New-up state of the prescrbed type.
             state = new T();
@@ -105,7 +106,8 @@ namespace RSG
         /// </summary>
         /// <typeparam name="NewStateT">Handler type for the new state</typeparam>
         /// <returns>A new state builder object for the new child state</returns>
-        public IStateBuilder<NewStateT, IStateBuilder<T, TParent>> State<NewStateT>() where NewStateT : AbstractState, new()
+        public IStateBuilder<NewStateT, IStateBuilder<T, TParent>> State<NewStateT>() 
+            where NewStateT : AbstractState, new()
         {
             return new StateBuilder<NewStateT, IStateBuilder<T, TParent>>(this, state);
         }
@@ -116,7 +118,8 @@ namespace RSG
         /// <typeparam name="NewStateT">Handler type for the new state</typeparam>
         /// <param name="name">String for identifying state in parent</param>
         /// <returns>A new state builder object for the new child state</returns>
-        public IStateBuilder<NewStateT, IStateBuilder<T, TParent>> State<NewStateT>(string name) where NewStateT : AbstractState, new()
+        public IStateBuilder<NewStateT, IStateBuilder<T, TParent>> State<NewStateT>(string name) 
+            where NewStateT : AbstractState, new()
         {
             return new StateBuilder<NewStateT, IStateBuilder<T, TParent>>(this, state, name);
         }
@@ -166,7 +169,7 @@ namespace RSG
         /// </summary>
         public TParent End()
         {
-            return parentClass;
+            return parentBuilder;
         }
     }
 }

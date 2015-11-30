@@ -103,6 +103,21 @@ namespace RSG.FluentStateMachineTests
         }
 
         [Fact]
+        public void changing_to_non_existant_state_leaves_state_intact()
+        {
+            var rootState = CreateTestState();
+
+            var mockState = new Mock<IState>();
+            rootState.AddChild(mockState.Object, "foo");
+
+            rootState.ChangeState("foo");
+
+            Assert.Throws<ApplicationException>(() => rootState.ChangeState("some other non-existant state"));
+
+            mockState.Verify(state => state.Exit(), Times.Never());
+        }
+
+        [Fact]
         public void new_state_is_inactive_by_default()
         {
             var rootState = CreateTestState();
@@ -201,6 +216,14 @@ namespace RSG.FluentStateMachineTests
             rootState.Update(1.0f);
 
             mockState.Verify(state => state.Update(It.IsAny<float>()), Times.Once());
+        }
+
+        [Fact]
+        public void pop_state_with_no_children_throws_exception()
+        {
+            var rootState = CreateTestState();
+
+            Assert.Throws<ApplicationException>(() => rootState.PopState());
         }
 
         [Fact]

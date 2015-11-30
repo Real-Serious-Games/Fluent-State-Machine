@@ -90,23 +90,22 @@ namespace RSG
         /// </summary>
         public void ChangeState(string stateName)
         {
+            // Try to find the specified state.
+            IState newState;
+            if (!children.TryGetValue(stateName, out newState))
+            {
+                throw new ApplicationException("Tried to change to state \"" + stateName + "\", but it is not in the list of children.");
+            }
+
             // Exit and pop the current state
             if (activeChildren.Count > 0)
             {
                 activeChildren.Pop().Exit();
             }
 
-            // Find the new state and add it
-            try
-            {
-                var newState = children[stateName];
-                activeChildren.Push(newState);
-                newState.Enter();
-            }
-            catch (KeyNotFoundException)
-            {
-                throw new ApplicationException("Tried to change to state \"" + stateName + "\", but it is not in the list of children.");
-            }
+            // Activate the new state
+            activeChildren.Push(newState);
+            newState.Enter();
         }
 
         /// <summary>
@@ -130,9 +129,13 @@ namespace RSG
         public void PopState()
         {
             // Exit and pop the current state
-            if (activeChildren.Count > 0)
+            if (activeChildren.Any())
             {
                 activeChildren.Pop().Exit();
+            }
+            else
+            {
+                throw new ApplicationException("PopState called on state with no active children to pop.");
             }
         }
 
@@ -142,26 +145,24 @@ namespace RSG
         public void Update(float deltaTime)
         {
             // Only update the child at the end of the tree
-            if (activeChildren.Count == 0)
-            {
-                if (onUpdate != null)
-                {
-                    onUpdate(deltaTime);
-                }
-
-                // Update conditions
-                foreach (var conditon in conditions)
-                {
-                    if (conditon.Predicate())
-                    {
-                        conditon.Action();
-                    }
-                }
-
-            }
-            else
+            if (activeChildren.Any())
             {
                 activeChildren.Peek().Update(deltaTime);
+                return;
+            }
+
+            if (onUpdate != null)
+            {
+                onUpdate(deltaTime);
+            }
+
+            // Update conditions
+            foreach (var conditon in conditions)
+            {
+                if (conditon.Predicate())
+                {
+                    conditon.Action();
+                }
             }
         }
 
@@ -258,7 +259,7 @@ namespace RSG
                 onExit();
             }
 
-            while (activeChildren.Count > 0)
+            while (activeChildren.Any())
             {
                 activeChildren.Pop().Exit();
             }
