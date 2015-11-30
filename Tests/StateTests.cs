@@ -131,23 +131,6 @@ namespace RSG.FluentStateMachineTests
             mockState.Verify(state => state.Update(1.0f), Times.Once());
         }
 
-        //[Fact]
-        //public void push_state_exits_the_current_state()
-        //{
-        //    var rootState = CreateTestState();
-
-        //    var mockState = new Mock<IState>();
-        //    rootState.AddChild(mockState.Object, "foo");
-
-        //    var stateToPush = CreateTestState();
-        //    rootState.AddChild(stateToPush, "bar");
-
-        //    rootState.ChangeState("foo");
-        //    rootState.PushState("bar");
-
-        //    mockState.Verify(state => state.Exit(), Times.Once());
-        //}
-
         [Fact]
         public void push_state_enters_new_state()
         {
