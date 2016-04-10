@@ -239,6 +239,15 @@ namespace RSG
         }
 
         /// <summary>
+        /// Sets an action to be associated with an identifier that can later be used
+        /// to trigger it.
+        /// </summary>
+        public void SetEvent(string identifier, Action eventTriggeredAction)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Triggered when we enter the state.
         /// </summary>
         public void Enter()
@@ -263,6 +272,16 @@ namespace RSG
             {
                 activeChildren.Pop().Exit();
             }
+        }
+
+        /// <summary>
+        /// Triggered when and event occurs. Executes the event's action if the 
+        /// current state is at the top of the stack, otherwise triggers it on 
+        /// the next state down.
+        /// </summary>
+        public void TriggerEvent(string name)
+        {
+            throw new NotImplementedException();
         }
     }
 
