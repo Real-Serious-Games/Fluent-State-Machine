@@ -194,3 +194,10 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+
+# Unity
+**/Library/
+**/Temp/
+**/Builds/
+Examples/Example2/*.sln
+Examples/Example2/*.csproj
