@@ -46,6 +46,11 @@ namespace RSG
         /// Triggered when we exit the state.
         /// </summary>
         void Exit();
+
+        /// <summary>
+        /// Trigger an event on this state or one of its children.
+        /// </summary>
+        void TriggerEvent(string name);
     }
 
     /// <summary>
