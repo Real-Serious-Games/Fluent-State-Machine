@@ -91,6 +91,11 @@ namespace RSG
         private IDictionary<string, IState> children = new Dictionary<string, IState>();
 
         /// <summary>
+        /// Dictionary of all actions associated with this state.
+        /// </summary>
+        private IDictionary<string, Action> events = new Dictionary<string, Action>();
+
+        /// <summary>
         /// Pops the current state from the stack and pushes the specified one on.
         /// </summary>
         public void ChangeState(string stateName)
@@ -249,7 +254,7 @@ namespace RSG
         /// </summary>
         public void SetEvent(string identifier, Action eventTriggeredAction)
         {
-            throw new NotImplementedException();
+            events.Add(identifier, eventTriggeredAction);
         }
 
         /// <summary>
@@ -286,7 +291,17 @@ namespace RSG
         /// </summary>
         public void TriggerEvent(string name)
         {
-            throw new NotImplementedException();
+            // Only update the child at the end of the tree
+            if (activeChildren.Any())
+            {
+                activeChildren.Peek().TriggerEvent(name);
+                return;
+            }
+
+            if (events.ContainsKey(name))
+            {
+                events[name]();
+            }
         }
     }
 
