@@ -199,5 +199,5 @@ FakesAssemblies/
 **/Library/
 **/Temp/
 **/Builds/
-Examples/Example2/*.sln
-Examples/Example2/*.csproj
+Examples/Unity Example/*.sln
+Examples/Unity Example/*.csproj
