@@ -48,6 +48,11 @@ namespace RSG
         IStateBuilder<T, TParent> Condition(Func<bool> predicate, Action<T> action);
 
         /// <summary>
+        /// Set an action to be triggerable when an event with the specified name is raised.
+        /// </summary>
+        IStateBuilder<T, TParent> Event(string identifier, Action<T> action);
+
+        /// <summary>
         /// Finalise the current state and return the builder for its parent.
         /// </summary>
         TParent End();
@@ -160,6 +165,16 @@ namespace RSG
         public IStateBuilder<T, TParent> Condition(Func<bool> predicate, Action<T> action)
         {
             state.SetCondition(predicate, () => action(state));
+
+            return this;
+        }
+
+        /// <summary>
+        /// Set an action to be triggerable when an event with the specified name is raised.
+        /// </summary>
+        public IStateBuilder<T, TParent> Event(string identifier, Action<T> action)
+        {
+            state.SetEvent(identifier, () => action(state));
 
             return this;
         }

@@ -46,6 +46,11 @@ namespace RSG
         /// Triggered when we exit the state.
         /// </summary>
         void Exit();
+
+        /// <summary>
+        /// Trigger an event on this state or one of its children.
+        /// </summary>
+        void TriggerEvent(string name);
     }
 
     /// <summary>
@@ -84,6 +89,11 @@ namespace RSG
         /// Dictionary of all children (active and inactive), and their names.
         /// </summary>
         private IDictionary<string, IState> children = new Dictionary<string, IState>();
+
+        /// <summary>
+        /// Dictionary of all actions associated with this state.
+        /// </summary>
+        private IDictionary<string, Action> events = new Dictionary<string, Action>();
 
         /// <summary>
         /// Pops the current state from the stack and pushes the specified one on.
@@ -239,6 +249,15 @@ namespace RSG
         }
 
         /// <summary>
+        /// Sets an action to be associated with an identifier that can later be used
+        /// to trigger it.
+        /// </summary>
+        public void SetEvent(string identifier, Action eventTriggeredAction)
+        {
+            events.Add(identifier, eventTriggeredAction);
+        }
+
+        /// <summary>
         /// Triggered when we enter the state.
         /// </summary>
         public void Enter()
@@ -262,6 +281,26 @@ namespace RSG
             while (activeChildren.Any())
             {
                 activeChildren.Pop().Exit();
+            }
+        }
+
+        /// <summary>
+        /// Triggered when and event occurs. Executes the event's action if the 
+        /// current state is at the top of the stack, otherwise triggers it on 
+        /// the next state down.
+        /// </summary>
+        public void TriggerEvent(string name)
+        {
+            // Only update the child at the end of the tree
+            if (activeChildren.Any())
+            {
+                activeChildren.Peek().TriggerEvent(name);
+                return;
+            }
+
+            if (events.ContainsKey(name))
+            {
+                events[name]();
             }
         }
     }
