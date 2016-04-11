@@ -144,7 +144,7 @@ namespace RSG
         /// </summary>
         public IStateBuilder<T, TParent> Exit(Action<T> onExit)
         {
-            state.SetEnterAction(() => onExit(state));
+            state.SetExitAction(() => onExit(state));
 
             return this;
         }

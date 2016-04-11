@@ -88,6 +88,7 @@ namespace RSG.FluentStateMachineTests
 
             rootState.ChangeState("foo");
             rootState.ChangeState("bar");
+            rootState.ChangeState("foo");
 
             Assert.Equal(1, timesExitCalled);
         }
