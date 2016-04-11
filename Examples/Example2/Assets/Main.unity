@@ -235,6 +235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18f7080283634614f801c627e98799c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  goal: {fileID: 1786774046}
 --- !u!195 &438628308
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -428,7 +429,7 @@ GameObject:
   - 65: {fileID: 1786774044}
   - 23: {fileID: 1786774043}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: GoalCube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
