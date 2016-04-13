@@ -88,6 +88,7 @@ namespace RSG.FluentStateMachineTests
 
             rootState.ChangeState("foo");
             rootState.ChangeState("bar");
+            rootState.ChangeState("foo");
 
             Assert.Equal(1, timesExitCalled);
         }
@@ -129,6 +130,23 @@ namespace RSG.FluentStateMachineTests
             rootState.Update(1f);
 
             Assert.Equal(1, timesConditionActionCalled);
+        }
+
+        [Fact]
+        public void event_sets_up_event()
+        {
+            var timesEventRaised = 0;
+
+            var rootState = new StateMachineBuilder()
+                .State<TestState>("foo")
+                    .Event("newEvent", _ => timesEventRaised++)
+                .End()
+                .Build();
+            rootState.ChangeState("foo");
+
+            rootState.TriggerEvent("newEvent");
+
+            Assert.Equal(1, timesEventRaised);
         }
     }
 }
