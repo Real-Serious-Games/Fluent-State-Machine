@@ -298,9 +298,10 @@ namespace RSG
                 return;
             }
 
-            if (events.ContainsKey(name))
+            Action myEvent;
+            if (events.TryGetValue(name, out myEvent))
             {
-                events[name]();
+                myEvent();
             }
         }
     }
