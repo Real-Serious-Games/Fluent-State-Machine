@@ -46,6 +46,17 @@ namespace RSG
         }
 
         /// <summary>
+        /// Create a new state with a specified name and add it as a
+        /// child of the root state.
+        /// </summary>
+        /// <param name="stateName">Name for the new state</param>
+        /// <returns>Builder used to configure the new state</returns>
+        public IStateBuilder<State, StateMachineBuilder> State(string stateName)
+        {
+            return new StateBuilder<State, StateMachineBuilder>(this, rootState, stateName);
+        }
+
+        /// <summary>
         /// Return the root state once everything has been set up.
         /// </summary>
         public IState Build()

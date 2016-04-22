@@ -27,12 +27,28 @@ namespace RSG.FluentStateMachineTests
         }
 
         [Fact]
-        public void state_with_string_has_specified_name()
+        public void state_with_type_and_string_has_specified_name()
         {
             IState expectedParent = null;
 
             var rootState = new StateMachineBuilder()
                 .State<TestState>("test")
+                    .Enter(state => expectedParent = state.Parent)
+                .End()
+                .Build();
+
+            rootState.ChangeState("test");
+
+            Assert.Equal(rootState, expectedParent);
+        }
+
+        [Fact]
+        public void state_with_string_has_specified_name()
+        {
+            IState expectedParent = null;
+
+            var rootState = new StateMachineBuilder()
+                .State("test")
                     .Enter(state => expectedParent = state.Parent)
                 .End()
                 .Build();

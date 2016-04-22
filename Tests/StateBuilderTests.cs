@@ -12,7 +12,7 @@ namespace RSG.FluentStateMachineTests
         private class TestState : AbstractState { }
 
         [Fact]
-        public void state_adds_state_as_child_of_current_state()
+        public void state_with_type_adds_state_as_child_of_current_state()
         {
             IState expectedParent = null;
             IState actualParent = null;
@@ -35,7 +35,7 @@ namespace RSG.FluentStateMachineTests
         }
 
         [Fact]
-        public void named_state_is_added_with_correct_name()
+        public void named_state_with_type_is_added_with_correct_name()
         {
             IState expectedParent = null;
             IState actualParent = null;
@@ -47,6 +47,29 @@ namespace RSG.FluentStateMachineTests
                         state.ChangeState("bar");
                     })
                     .State<TestState>("bar")
+                        .Enter(state => actualParent = state.Parent)
+                    .End()
+                .End()
+                .Build();
+
+            rootState.ChangeState("foo");
+
+            Assert.Equal(expectedParent, actualParent);
+        }
+
+        [Fact]
+        public void state_adds_state_as_child_of_current_state()
+        {
+            IState expectedParent = null;
+            IState actualParent = null;
+
+            var rootState = new StateMachineBuilder()
+                .State<TestState>("foo")
+                    .Enter(state => {
+                        expectedParent = state;
+                        state.ChangeState("bar");
+                    })
+                    .State("bar")
                         .Enter(state => actualParent = state.Parent)
                     .End()
                 .End()

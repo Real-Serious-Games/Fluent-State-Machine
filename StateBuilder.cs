@@ -28,6 +28,13 @@ namespace RSG
         IStateBuilder<NewStateT, IStateBuilder<T, TParent>> State<NewStateT>(string name) where NewStateT : AbstractState, new();
 
         /// <summary>
+        /// Create a child state with the default handler type.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>A state builder object for the new child state</returns>
+        IStateBuilder<State, IStateBuilder<T, TParent>> State(string name);
+
+        /// <summary>
         /// Set an action to be called when we enter the state.
         /// </summary>
         IStateBuilder<T, TParent> Enter(Action<T> onEnter);
@@ -127,6 +134,16 @@ namespace RSG
             where NewStateT : AbstractState, new()
         {
             return new StateBuilder<NewStateT, IStateBuilder<T, TParent>>(this, state, name);
+        }
+
+        /// <summary>
+        /// Create a child state with the default handler type.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>A state builder object for the new child state</returns>
+        public IStateBuilder<State, IStateBuilder<T, TParent>> State(string name)
+        {
+            return new StateBuilder<State, IStateBuilder<T, TParent>>(this, state, name);
         }
 
         /// <summary>
