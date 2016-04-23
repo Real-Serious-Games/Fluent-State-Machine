@@ -240,3 +240,16 @@ same state can have the same name, this can only be done once per type of state 
             .End()
         .End()
         .Build();
+        
+## Examples
+
+In the `Examples` directory there are a couple of example projects to demonstrate usage of the library.
+
+### Example 1
+
+This sample demonstrates a fairly simple state machine with custom nested states, from a console app.
+
+### Unity Example
+
+This sample comes as a Unity project and shows how one could set up the library for use in a Unity 
+game, as well as using *events* to trigger actions in response to Unity physics collision events. 
