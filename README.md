@@ -1,6 +1,23 @@
 # Fluent-State-Machine  [![Build Status](https://travis-ci.org/Real-Serious-Games/Fluent-State-Machine.svg)](https://travis-ci.org/Real-Serious-Games/Fluent-State-Machine) #
 Fluent API for creating [hierarchical finite state machines](http://aigamedev.com/open/article/hfsm-gist/) in C#.
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [A basic example - creating a state machine with a single state](#a-basic-example---creating-a-state-machine-with-a-single-state)
+- [Conditions](#conditions)
+- [Using multiple states](#using-multiple-states)
+- [Nesting states](#nesting-states)
+- [Pushing and popping nested states](#pushing-and-popping-nested-states)
+- [Events](#events)
+- [Custom states](#custom-states)
+- [Examples](#examples)
+  - [Example 1](#example-1)
+  - [Unity Example](#unity-example)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## A basic example - creating a state machine with a single state
 
 Reference the dll and include the namespace:
