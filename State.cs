@@ -289,7 +289,20 @@ namespace RSG
         /// current state is at the top of the stack, otherwise triggers it on 
         /// the next state down.
         /// </summary>
+        /// <param name="name">Name of the event to trigger</param>
         public void TriggerEvent(string name)
+        {
+            TriggerEvent(name, null);
+        }
+
+        /// <summary>
+        /// Triggered when and event occurs. Executes the event's action if the 
+        /// current state is at the top of the stack, otherwise triggers it on 
+        /// the next state down.
+        /// </summary>
+        /// <param name="name">Name of the event to trigger</param>
+        /// <param name="eventArgs">Arguments to send to the event</param>
+        public void TriggerEvent(string name, EventArgs eventArgs)
         {
             // Only update the child at the end of the tree
             if (activeChildren.Any())
@@ -301,13 +314,8 @@ namespace RSG
             Action<EventArgs> myEvent;
             if (events.TryGetValue(name, out myEvent))
             {
-                myEvent(null);
+                myEvent(eventArgs);
             }
-        }
-
-        public void TriggerEvent(string name, EventArgs eventArgs)
-        {
-            throw new NotImplementedException();
         }
     }
 
