@@ -60,6 +60,15 @@ namespace RSG
         IStateBuilder<T, TParent> Event(string identifier, Action<T> action);
 
         /// <summary>
+        /// Set an action with arguments to be triggerable when an event with the specified name is raised.
+        /// </summary>
+        /// <typeparam name="TEvent"></typeparam>
+        /// <param name="identifier"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        IStateBuilder<T, TParent> Event<TEvent>(string identifier, Action<T, TEvent> action) where TEvent : EventArgs;
+
+        /// <summary>
         /// Finalise the current state and return the builder for its parent.
         /// </summary>
         TParent End();

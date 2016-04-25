@@ -440,7 +440,7 @@ namespace RSG.FluentStateMachineTests
             rootState.PopState();
             rootState.TriggerEvent("someEvent");
 
-            mockState.Verify(state => state.TriggerEvent(It.IsAny<String>()), Times.Once());
+            mockState.Verify(state => state.TriggerEvent(It.IsAny<String>(), It.IsAny<EventArgs>()), Times.Once());
         }
 
         [Fact]
@@ -463,7 +463,7 @@ namespace RSG.FluentStateMachineTests
         }
 
         [Fact]
-        public void event_args_are_passed_on_to_event()
+        public void event_args_are_passed_on_to_child_event()
         {
             var rootState = CreateTestState();
 
@@ -473,11 +473,16 @@ namespace RSG.FluentStateMachineTests
             var testEventArgs = new TestEventArgs();
             testEventArgs.TestString = expectedString;
 
-            rootState.SetEvent("foo", eventArgs => {
+            var childState = CreateTestState();
+            rootState.AddChild(childState, "Child");
+
+            childState.SetEvent("foo", eventArgs => {
                 var actualEventArgs = (TestEventArgs)eventArgs;
 
                 actualString = actualEventArgs.TestString;
             });
+
+            rootState.PushState("Child");
 
             rootState.TriggerEvent("foo", testEventArgs);
 

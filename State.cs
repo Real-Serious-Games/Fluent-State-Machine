@@ -50,7 +50,17 @@ namespace RSG
         /// <summary>
         /// Trigger an event on this state or one of its children.
         /// </summary>
+        /// <param name="name">Name of the event to trigger</param>
         void TriggerEvent(string name);
+
+        /// <summary>
+        /// Triggered when and event occurs. Executes the event's action if the 
+        /// current state is at the top of the stack, otherwise triggers it on 
+        /// the next state down.
+        /// </summary>
+        /// <param name="name">Name of the event to trigger</param>
+        /// <param name="eventArgs">Arguments to send to the event</param>
+        void TriggerEvent(string name, EventArgs eventArgs);
     }
 
     /// <summary>
@@ -307,7 +317,7 @@ namespace RSG
             // Only update the child at the end of the tree
             if (activeChildren.Any())
             {
-                activeChildren.Peek().TriggerEvent(name);
+                activeChildren.Peek().TriggerEvent(name, eventArgs);
                 return;
             }
 

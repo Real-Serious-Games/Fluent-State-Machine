@@ -11,6 +11,11 @@ namespace RSG.FluentStateMachineTests
     {
         private class TestState : AbstractState { }
 
+        class TestEventArgs : EventArgs
+        {
+            public string TestString { get; set; }
+        }
+
         [Fact]
         public void state_with_type_adds_state_as_child_of_current_state()
         {
@@ -170,6 +175,27 @@ namespace RSG.FluentStateMachineTests
             rootState.TriggerEvent("newEvent");
 
             Assert.Equal(1, timesEventRaised);
+        }
+
+        [Fact]
+        public void event_passes_correct_arguments()
+        {
+            var expectedString = "test";
+            var actualString = string.Empty;
+
+            var testEventArgs = new TestEventArgs();
+            testEventArgs.TestString = expectedString;
+
+            var rootState = new StateMachineBuilder()
+                .State<TestState>("foo")
+                    .Event<TestEventArgs>("newEvent", (state, eventArgs) => actualString = eventArgs.TestString)
+                .End()
+                .Build();
+            rootState.ChangeState("foo");
+
+            rootState.TriggerEvent("newEvent", testEventArgs);
+
+            Assert.Equal(expectedString, actualString);
         }
     }
 }
