@@ -93,7 +93,7 @@ namespace RSG
         /// <summary>
         /// Dictionary of all actions associated with this state.
         /// </summary>
-        private IDictionary<string, Action> events = new Dictionary<string, Action>();
+        private IDictionary<string, Action<EventArgs>> events = new Dictionary<string, Action<EventArgs>>();
 
         /// <summary>
         /// Pops the current state from the stack and pushes the specified one on.
@@ -252,7 +252,7 @@ namespace RSG
         /// Sets an action to be associated with an identifier that can later be used
         /// to trigger it.
         /// </summary>
-        public void SetEvent(string identifier, Action eventTriggeredAction)
+        public void SetEvent(string identifier, Action<EventArgs> eventTriggeredAction)
         {
             events.Add(identifier, eventTriggeredAction);
         }
@@ -298,11 +298,16 @@ namespace RSG
                 return;
             }
 
-            Action myEvent;
+            Action<EventArgs> myEvent;
             if (events.TryGetValue(name, out myEvent))
             {
-                myEvent();
+                myEvent(null);
             }
+        }
+
+        public void TriggerEvent(string name, EventArgs eventArgs)
+        {
+            throw new NotImplementedException();
         }
     }
 

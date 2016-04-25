@@ -11,6 +11,11 @@ namespace RSG.FluentStateMachineTests
     {
         class TestState : AbstractState { }
 
+        class TestEventArgs : EventArgs
+        {
+            public string TestString { get; set; }
+        }
+
         AbstractState CreateTestState()
         {
             return new TestState();
@@ -375,7 +380,7 @@ namespace RSG.FluentStateMachineTests
 
             var calls = 0;
 
-            rootState.SetEvent("foo", () => calls++);
+            rootState.SetEvent("foo", _ => calls++);
 
             rootState.TriggerEvent("foo");
 
@@ -410,8 +415,8 @@ namespace RSG.FluentStateMachineTests
             var rootStateCalls = 0;
             var childStateCalls = 0;
 
-            rootState.SetEvent("foo", () => rootStateCalls++);
-            childState.SetEvent("foo", () => childStateCalls++);
+            rootState.SetEvent("foo", _ => rootStateCalls++);
+            childState.SetEvent("foo", _ => childStateCalls++);
 
             rootState.AddChild(childState, "child state");
             rootState.PushState("child state");
@@ -436,6 +441,47 @@ namespace RSG.FluentStateMachineTests
             rootState.TriggerEvent("someEvent");
 
             mockState.Verify(state => state.TriggerEvent(It.IsAny<String>()), Times.Once());
+        }
+
+        [Fact]
+        public void event_args_are_null_when_not_specified()
+        {
+            var rootState = CreateTestState();
+
+            var calls = 0;
+
+            rootState.SetEvent("foo", eventArgs => {
+                if (eventArgs == null)
+                {
+                    calls++;
+                }
+            });
+
+            rootState.TriggerEvent("foo");
+
+            Assert.Equal(1, calls);
+        }
+
+        [Fact]
+        public void event_args_are_passed_on_to_event()
+        {
+            var rootState = CreateTestState();
+
+            var expectedString = "test";
+            var actualString = string.Empty;
+
+            var testEventArgs = new TestEventArgs();
+            testEventArgs.TestString = expectedString;
+
+            rootState.SetEvent("foo", eventArgs => {
+                var actualEventArgs = (TestEventArgs)eventArgs;
+
+                actualString = actualEventArgs.TestString;
+            });
+
+            rootState.TriggerEvent("foo", testEventArgs);
+
+            Assert.Equal(expectedString, actualString);
         }
     }
 }

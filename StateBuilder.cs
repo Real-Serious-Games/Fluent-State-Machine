@@ -191,7 +191,17 @@ namespace RSG
         /// </summary>
         public IStateBuilder<T, TParent> Event(string identifier, Action<T> action)
         {
-            state.SetEvent(identifier, () => action(state));
+            state.SetEvent(identifier, _ => action(state));
+
+            return this;
+        }
+
+        /// <summary>
+        /// Set an action with arguments to be triggerable when an event with the specified name is raised.
+        /// </summary>
+        public IStateBuilder<T, TParent> Event<TEvent>(string identifier, Action<T, TEvent> action) where TEvent : EventArgs
+        {
+            state.SetEvent(identifier, args => action(state, (TEvent)args));
 
             return this;
         }
