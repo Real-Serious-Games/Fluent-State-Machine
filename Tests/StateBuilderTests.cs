@@ -217,7 +217,6 @@ namespace RSG.FluentStateMachineTests
             rootState.ChangeState("foo");
 
             Assert.Throws<ApplicationException>(() => rootState.TriggerEvent("newEvent", testEventArgs));
-            ;
         }
     }
 }

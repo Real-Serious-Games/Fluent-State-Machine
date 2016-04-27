@@ -16,6 +16,8 @@ namespace RSG.FluentStateMachineTests
             public string TestString { get; set; }
         }
 
+        class OtherTestEventArgs : EventArgs { }
+
         AbstractState CreateTestState()
         {
             return new TestState();
@@ -487,6 +489,17 @@ namespace RSG.FluentStateMachineTests
             rootState.TriggerEvent("foo", testEventArgs);
 
             Assert.Equal(expectedString, actualString);
+        }
+
+        [Fact]
+        public void triggering_event_with_incorrect_type_of_EventArgs_throws_exception()
+        {
+            var rootState = CreateTestState();
+
+            rootState.SetEvent<OtherTestEventArgs>("foo", _ => { });
+
+            Assert.Throws<ApplicationException>(() =>
+                rootState.TriggerEvent("foo", new TestEventArgs()));
         }
     }
 }

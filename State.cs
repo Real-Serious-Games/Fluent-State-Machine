@@ -261,10 +261,39 @@ namespace RSG
         /// <summary>
         /// Sets an action to be associated with an identifier that can later be used
         /// to trigger it.
+        /// Convenience method that uses default event args intended for events that 
+        /// don't need any arguments.
         /// </summary>
         public void SetEvent(string identifier, Action<EventArgs> eventTriggeredAction)
         {
-            events.Add(identifier, eventTriggeredAction);
+            SetEvent<EventArgs>(identifier, eventTriggeredAction);
+        }
+
+        /// <summary>
+        /// Sets an action to be associated with an identifier that can later be used
+        /// to trigger it.
+        /// </summary>
+        public void SetEvent<TEvent>(string identifier, Action<TEvent> eventTriggeredAction)
+            where TEvent : EventArgs
+        {
+            events.Add(identifier, args => eventTriggeredAction(CheckEventArgs<TEvent>(identifier, args)));
+        }
+
+        /// <summary>
+        /// Cast the specified EventArgs to a specified type, throwing a descriptive exception if this fails.
+        /// </summary>
+        private static TEvent CheckEventArgs<TEvent>(string identifier, EventArgs args) 
+            where TEvent : EventArgs
+        {
+            try
+            {
+                return (TEvent)args;
+            }
+            catch (InvalidCastException ex)
+            {
+                throw new ApplicationException("Could not invoke event \"" + identifier + "\" with argument of type " +
+                    args.GetType().Name + ". Expected " + typeof(TEvent).Name, ex);
+            }
         }
 
         /// <summary>
