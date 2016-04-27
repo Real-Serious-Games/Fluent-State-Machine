@@ -208,11 +208,32 @@ namespace RSG
         /// <summary>
         /// Set an action with arguments to be triggerable when an event with the specified name is raised.
         /// </summary>
-        public IStateBuilder<T, TParent> Event<TEvent>(string identifier, Action<T, TEvent> action) where TEvent : EventArgs
+        public IStateBuilder<T, TParent> Event<TEvent>(string identifier, Action<T, TEvent> action) 
+            where TEvent : EventArgs
         {
-            state.SetEvent(identifier, args => action(state, (TEvent)args));
+            state.SetEvent(identifier, args =>
+            {
+                action(state, CheckEventArgs<TEvent>(identifier, args));
+            });
 
             return this;
+        }
+
+        /// <summary>
+        /// Cast the specified EventArgs to a specified type, throwing a descriptive exception if this fails.
+        /// </summary>
+        private static TEvent CheckEventArgs<TEvent>(string identifier, EventArgs args) 
+            where TEvent : EventArgs
+        {
+            try
+            {
+                return (TEvent)args;
+            }
+            catch (InvalidCastException ex)
+            {
+                throw new ApplicationException("Could not invoke event \"" + identifier + "\" with argument of type " +
+                    args.GetType().Name + ". Expected " + typeof(TEvent).Name, ex);
+            }
         }
 
         /// <summary>
