@@ -16,6 +16,8 @@ namespace RSG.FluentStateMachineTests
             public string TestString { get; set; }
         }
 
+        class OtherTestEventArgs : EventArgs { }
+
         AbstractState CreateTestState()
         {
             return new TestState();
@@ -444,14 +446,14 @@ namespace RSG.FluentStateMachineTests
         }
 
         [Fact]
-        public void event_args_are_null_when_not_specified()
+        public void event_args_are_empty_when_not_specified()
         {
             var rootState = CreateTestState();
 
             var calls = 0;
 
             rootState.SetEvent("foo", eventArgs => {
-                if (eventArgs == null)
+                if (eventArgs == EventArgs.Empty)
                 {
                     calls++;
                 }
@@ -487,6 +489,17 @@ namespace RSG.FluentStateMachineTests
             rootState.TriggerEvent("foo", testEventArgs);
 
             Assert.Equal(expectedString, actualString);
+        }
+
+        [Fact]
+        public void triggering_event_with_incorrect_type_of_EventArgs_throws_exception()
+        {
+            var rootState = CreateTestState();
+
+            rootState.SetEvent<OtherTestEventArgs>("foo", _ => { });
+
+            Assert.Throws<ApplicationException>(() =>
+                rootState.TriggerEvent("foo", new TestEventArgs()));
         }
     }
 }
