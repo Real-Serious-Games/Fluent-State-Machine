@@ -11,8 +11,13 @@ namespace RSG.FluentStateMachineTests
     {
         private class TestState : AbstractState { }
 
+        class TestEventArgs : EventArgs
+        {
+            public string TestString { get; set; }
+        }
+
         [Fact]
-        public void state_adds_state_as_child_of_current_state()
+        public void state_with_type_adds_state_as_child_of_current_state()
         {
             IState expectedParent = null;
             IState actualParent = null;
@@ -35,7 +40,7 @@ namespace RSG.FluentStateMachineTests
         }
 
         [Fact]
-        public void named_state_is_added_with_correct_name()
+        public void named_state_with_type_is_added_with_correct_name()
         {
             IState expectedParent = null;
             IState actualParent = null;
@@ -47,6 +52,29 @@ namespace RSG.FluentStateMachineTests
                         state.ChangeState("bar");
                     })
                     .State<TestState>("bar")
+                        .Enter(state => actualParent = state.Parent)
+                    .End()
+                .End()
+                .Build();
+
+            rootState.ChangeState("foo");
+
+            Assert.Equal(expectedParent, actualParent);
+        }
+
+        [Fact]
+        public void state_adds_state_as_child_of_current_state()
+        {
+            IState expectedParent = null;
+            IState actualParent = null;
+
+            var rootState = new StateMachineBuilder()
+                .State<TestState>("foo")
+                    .Enter(state => {
+                        expectedParent = state;
+                        state.ChangeState("bar");
+                    })
+                    .State("bar")
                         .Enter(state => actualParent = state.Parent)
                     .End()
                 .End()
@@ -147,6 +175,27 @@ namespace RSG.FluentStateMachineTests
             rootState.TriggerEvent("newEvent");
 
             Assert.Equal(1, timesEventRaised);
+        }
+
+        [Fact]
+        public void event_passes_correct_arguments()
+        {
+            var expectedString = "test";
+            var actualString = string.Empty;
+
+            var testEventArgs = new TestEventArgs();
+            testEventArgs.TestString = expectedString;
+
+            var rootState = new StateMachineBuilder()
+                .State<TestState>("foo")
+                    .Event<TestEventArgs>("newEvent", (state, eventArgs) => actualString = eventArgs.TestString)
+                .End()
+                .Build();
+            rootState.ChangeState("foo");
+
+            rootState.TriggerEvent("newEvent", testEventArgs);
+
+            Assert.Equal(expectedString, actualString);
         }
     }
 }

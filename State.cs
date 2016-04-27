@@ -50,7 +50,17 @@ namespace RSG
         /// <summary>
         /// Trigger an event on this state or one of its children.
         /// </summary>
+        /// <param name="name">Name of the event to trigger</param>
         void TriggerEvent(string name);
+
+        /// <summary>
+        /// Triggered when and event occurs. Executes the event's action if the 
+        /// current state is at the top of the stack, otherwise triggers it on 
+        /// the next state down.
+        /// </summary>
+        /// <param name="name">Name of the event to trigger</param>
+        /// <param name="eventArgs">Arguments to send to the event</param>
+        void TriggerEvent(string name, EventArgs eventArgs);
     }
 
     /// <summary>
@@ -93,7 +103,7 @@ namespace RSG
         /// <summary>
         /// Dictionary of all actions associated with this state.
         /// </summary>
-        private IDictionary<string, Action> events = new Dictionary<string, Action>();
+        private IDictionary<string, Action<EventArgs>> events = new Dictionary<string, Action<EventArgs>>();
 
         /// <summary>
         /// Pops the current state from the stack and pushes the specified one on.
@@ -252,7 +262,7 @@ namespace RSG
         /// Sets an action to be associated with an identifier that can later be used
         /// to trigger it.
         /// </summary>
-        public void SetEvent(string identifier, Action eventTriggeredAction)
+        public void SetEvent(string identifier, Action<EventArgs> eventTriggeredAction)
         {
             events.Add(identifier, eventTriggeredAction);
         }
@@ -289,19 +299,32 @@ namespace RSG
         /// current state is at the top of the stack, otherwise triggers it on 
         /// the next state down.
         /// </summary>
+        /// <param name="name">Name of the event to trigger</param>
         public void TriggerEvent(string name)
+        {
+            TriggerEvent(name, null);
+        }
+
+        /// <summary>
+        /// Triggered when and event occurs. Executes the event's action if the 
+        /// current state is at the top of the stack, otherwise triggers it on 
+        /// the next state down.
+        /// </summary>
+        /// <param name="name">Name of the event to trigger</param>
+        /// <param name="eventArgs">Arguments to send to the event</param>
+        public void TriggerEvent(string name, EventArgs eventArgs)
         {
             // Only update the child at the end of the tree
             if (activeChildren.Any())
             {
-                activeChildren.Peek().TriggerEvent(name);
+                activeChildren.Peek().TriggerEvent(name, eventArgs);
                 return;
             }
 
-            Action myEvent;
+            Action<EventArgs> myEvent;
             if (events.TryGetValue(name, out myEvent))
             {
-                myEvent();
+                myEvent(eventArgs);
             }
         }
     }

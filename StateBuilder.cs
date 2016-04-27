@@ -28,6 +28,13 @@ namespace RSG
         IStateBuilder<NewStateT, IStateBuilder<T, TParent>> State<NewStateT>(string name) where NewStateT : AbstractState, new();
 
         /// <summary>
+        /// Create a child state with the default handler type.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>A state builder object for the new child state</returns>
+        IStateBuilder<State, IStateBuilder<T, TParent>> State(string name);
+
+        /// <summary>
         /// Set an action to be called when we enter the state.
         /// </summary>
         IStateBuilder<T, TParent> Enter(Action<T> onEnter);
@@ -51,6 +58,15 @@ namespace RSG
         /// Set an action to be triggerable when an event with the specified name is raised.
         /// </summary>
         IStateBuilder<T, TParent> Event(string identifier, Action<T> action);
+
+        /// <summary>
+        /// Set an action with arguments to be triggerable when an event with the specified name is raised.
+        /// </summary>
+        /// <typeparam name="TEvent"></typeparam>
+        /// <param name="identifier"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        IStateBuilder<T, TParent> Event<TEvent>(string identifier, Action<T, TEvent> action) where TEvent : EventArgs;
 
         /// <summary>
         /// Finalise the current state and return the builder for its parent.
@@ -130,6 +146,16 @@ namespace RSG
         }
 
         /// <summary>
+        /// Create a child state with the default handler type.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>A state builder object for the new child state</returns>
+        public IStateBuilder<State, IStateBuilder<T, TParent>> State(string name)
+        {
+            return new StateBuilder<State, IStateBuilder<T, TParent>>(this, state, name);
+        }
+
+        /// <summary>
         /// Set an action to be called when we enter the state.
         /// </summary>
         public IStateBuilder<T, TParent> Enter(Action<T> onEnter)
@@ -174,7 +200,17 @@ namespace RSG
         /// </summary>
         public IStateBuilder<T, TParent> Event(string identifier, Action<T> action)
         {
-            state.SetEvent(identifier, () => action(state));
+            state.SetEvent(identifier, _ => action(state));
+
+            return this;
+        }
+
+        /// <summary>
+        /// Set an action with arguments to be triggerable when an event with the specified name is raised.
+        /// </summary>
+        public IStateBuilder<T, TParent> Event<TEvent>(string identifier, Action<T, TEvent> action) where TEvent : EventArgs
+        {
+            state.SetEvent(identifier, args => action(state, (TEvent)args));
 
             return this;
         }
