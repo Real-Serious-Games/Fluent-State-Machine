@@ -444,14 +444,14 @@ namespace RSG.FluentStateMachineTests
         }
 
         [Fact]
-        public void event_args_are_null_when_not_specified()
+        public void event_args_are_empty_when_not_specified()
         {
             var rootState = CreateTestState();
 
             var calls = 0;
 
             rootState.SetEvent("foo", eventArgs => {
-                if (eventArgs == null)
+                if (eventArgs == EventArgs.Empty)
                 {
                     calls++;
                 }

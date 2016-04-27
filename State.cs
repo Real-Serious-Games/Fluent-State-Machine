@@ -302,7 +302,7 @@ namespace RSG
         /// <param name="name">Name of the event to trigger</param>
         public void TriggerEvent(string name)
         {
-            TriggerEvent(name, null);
+            TriggerEvent(name, EventArgs.Empty);
         }
 
         /// <summary>
