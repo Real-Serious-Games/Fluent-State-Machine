@@ -177,11 +177,11 @@ namespace RSG
             }
 
             // Update conditions
-            foreach (var conditon in conditions)
+            for (var i = 0; i < conditions.Count; i++)
             {
-                if (conditon.Predicate())
+                if (conditions[i].Predicate())
                 {
-                    conditon.Action();
+                    conditions[i].Action();
                 }
             }
         }
