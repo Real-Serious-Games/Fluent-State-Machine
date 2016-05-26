@@ -149,7 +149,7 @@ namespace RSG
         public void PopState()
         {
             // Exit and pop the current state
-            if (activeChildren.Any())
+            if (activeChildren.Count > 0)
             {
                 activeChildren.Pop().Exit();
             }
@@ -165,7 +165,7 @@ namespace RSG
         public void Update(float deltaTime)
         {
             // Only update the child at the end of the tree
-            if (activeChildren.Any())
+            if (activeChildren.Count > 0)
             {
                 activeChildren.Peek().Update(deltaTime);
                 return;
@@ -317,7 +317,7 @@ namespace RSG
                 onExit();
             }
 
-            while (activeChildren.Any())
+            while (activeChildren.Count > 0)
             {
                 activeChildren.Pop().Exit();
             }
@@ -344,7 +344,7 @@ namespace RSG
         public void TriggerEvent(string name, EventArgs eventArgs)
         {
             // Only update the child at the end of the tree
-            if (activeChildren.Any())
+            if (activeChildren.Count > 0)
             {
                 activeChildren.Peek().TriggerEvent(name, eventArgs);
                 return;
