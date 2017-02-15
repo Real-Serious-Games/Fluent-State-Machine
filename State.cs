@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 
 namespace RSG
 {
@@ -83,7 +80,7 @@ namespace RSG
         /// </summary>
         private Action onExit;
 
-        private IList<Condition> conditions = new List<Condition>();
+        private readonly IList<Condition> conditions = new List<Condition>();
 
         /// <summary>
         /// Parent state, or null if this is the root level state.
@@ -93,17 +90,17 @@ namespace RSG
         /// <summary>
         /// Stack of active child states.
         /// </summary>
-        private Stack<IState> activeChildren = new Stack<IState>();
+        private readonly Stack<IState> activeChildren = new Stack<IState>();
 
         /// <summary>
         /// Dictionary of all children (active and inactive), and their names.
         /// </summary>
-        private IDictionary<string, IState> children = new Dictionary<string, IState>();
+        private readonly IDictionary<string, IState> children = new Dictionary<string, IState>();
 
         /// <summary>
         /// Dictionary of all actions associated with this state.
         /// </summary>
-        private IDictionary<string, Action<EventArgs>> events = new Dictionary<string, Action<EventArgs>>();
+        private readonly IDictionary<string, Action<EventArgs>> events = new Dictionary<string, Action<EventArgs>>();
 
         /// <summary>
         /// Pops the current state from the stack and pushes the specified one on.
@@ -209,7 +206,7 @@ namespace RSG
         public void AddChild(IState newState)
         {
             var name = newState.GetType().Name;
-            this.AddChild(newState, name);
+            AddChild(newState, name);
         }
 
         /// <summary>

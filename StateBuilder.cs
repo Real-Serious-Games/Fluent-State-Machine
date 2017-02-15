@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 
 namespace RSG
 {
@@ -112,6 +108,7 @@ namespace RSG
         /// <param name="parentBuilder">The parent builder, or what we will return 
         /// when .End is called.</param>
         /// <param name="parentState">The parent of the new state to create.</param>
+        /// <param name="name">Name of the state to add.</param>
         public StateBuilder(TParent parentBuilder, AbstractState parentState, string name)
         {
             this.parentBuilder = parentBuilder;

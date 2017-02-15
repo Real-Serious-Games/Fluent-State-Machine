@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace RSG
+﻿namespace RSG
 {
     /// <summary>
     /// Entry point for fluent API for constructing states.
@@ -13,7 +8,7 @@ namespace RSG
         /// <summary>
         /// Root level state.
         /// </summary>
-        private State rootState;
+        private readonly State rootState;
 
         /// <summary>
         /// Entry point for constructing new state machines.
