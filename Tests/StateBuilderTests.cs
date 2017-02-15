@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Xunit;
-using RSG;
 
 namespace RSG.FluentStateMachineTests
 {
@@ -11,12 +7,12 @@ namespace RSG.FluentStateMachineTests
     {
         private class TestState : AbstractState { }
 
-        class TestEventArgs : EventArgs
+        private class TestEventArgs : EventArgs
         {
             public string TestString { get; set; }
         }
 
-        class SecondTestEventArgs : EventArgs { }
+        private class SecondTestEventArgs : EventArgs { }
 
         [Fact]
         public void state_with_type_adds_state_as_child_of_current_state()
@@ -182,11 +178,10 @@ namespace RSG.FluentStateMachineTests
         [Fact]
         public void event_passes_correct_arguments()
         {
-            var expectedString = "test";
+            const string expectedString = "test";
             var actualString = string.Empty;
 
-            var testEventArgs = new TestEventArgs();
-            testEventArgs.TestString = expectedString;
+            var testEventArgs = new TestEventArgs { TestString = expectedString };
 
             var rootState = new StateMachineBuilder()
                 .State<TestState>("foo")
@@ -203,11 +198,9 @@ namespace RSG.FluentStateMachineTests
         [Fact]
         public void triggering_event_with_incorrect_type_of_EventArgs_throws_exception()
         {
-            var expectedString = "test";
-            var actualString = string.Empty;
+            const string expectedString = "test";
 
-            var testEventArgs = new TestEventArgs();
-            testEventArgs.TestString = expectedString;
+            var testEventArgs = new TestEventArgs { TestString = expectedString };
 
             var rootState = new StateMachineBuilder()
                 .State<TestState>("foo")

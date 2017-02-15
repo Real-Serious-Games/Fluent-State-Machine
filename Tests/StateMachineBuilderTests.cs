@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Xunit;
+﻿using Xunit;
 
 namespace RSG.FluentStateMachineTests
 {
     public class StateMachineBuilderTests
     {
-        class TestState : AbstractState { }
+        private class TestState : AbstractState { }
 
         [Fact]
         public void build_returns_root_state_which_has_added_states_under_it()

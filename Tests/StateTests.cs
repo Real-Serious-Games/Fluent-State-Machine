@@ -1,24 +1,21 @@
 ﻿using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Xunit;
 
 namespace RSG.FluentStateMachineTests
 {
     public class StateTests
     {
-        class TestState : AbstractState { }
+        private class TestState : AbstractState { }
 
-        class TestEventArgs : EventArgs
+        private class TestEventArgs : EventArgs
         {
             public string TestString { get; set; }
         }
 
-        class OtherTestEventArgs : EventArgs { }
+        private class OtherTestEventArgs : EventArgs { }
 
-        AbstractState CreateTestState()
+        private static AbstractState CreateTestState()
         {
             return new TestState();
         }
@@ -405,7 +402,7 @@ namespace RSG.FluentStateMachineTests
 
             rootState.TriggerEvent("someEvent");
 
-            mockState.Verify(m => m.TriggerEvent(It.IsAny<String>()), Times.Never());
+            mockState.Verify(m => m.TriggerEvent(It.IsAny<string>()), Times.Never());
         }
 
         [Fact]
@@ -442,7 +439,7 @@ namespace RSG.FluentStateMachineTests
             rootState.PopState();
             rootState.TriggerEvent("someEvent");
 
-            mockState.Verify(state => state.TriggerEvent(It.IsAny<String>(), It.IsAny<EventArgs>()), Times.Once());
+            mockState.Verify(state => state.TriggerEvent(It.IsAny<string>(), It.IsAny<EventArgs>()), Times.Once());
         }
 
         [Fact]
@@ -472,8 +469,7 @@ namespace RSG.FluentStateMachineTests
             var expectedString = "test";
             var actualString = string.Empty;
 
-            var testEventArgs = new TestEventArgs();
-            testEventArgs.TestString = expectedString;
+            var testEventArgs = new TestEventArgs { TestString = expectedString };
 
             var childState = CreateTestState();
             rootState.AddChild(childState, "Child");
