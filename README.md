@@ -1,4 +1,4 @@
-# Fluent-State-Machine  [![Build Status](https://travis-ci.org/Real-Serious-Games/Fluent-State-Machine.svg)](https://travis-ci.org/Real-Serious-Games/Fluent-State-Machine) #
+# Fluent-State-Machine  [![Build Status](https://travis-ci.org/Real-Serious-Games/Fluent-State-Machine.svg)](https://travis-ci.org/Real-Serious-Games/Fluent-State-Machine) [![NuGet](https://img.shields.io/nuget/dt/Fluent-State-Machine.svg)](https://www.nuget.org/packages/Fluent-State-Machine/)
 Fluent API for creating [hierarchical finite state machines](http://aigamedev.com/open/article/hfsm-gist/) in C#.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
