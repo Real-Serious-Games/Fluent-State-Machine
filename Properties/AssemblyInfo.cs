@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Fluent-State-Machine")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Fluent API for creating state machines in C#")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Real Serious Games")]
 [assembly: AssemblyProduct("Fluent-State-Machine")]
