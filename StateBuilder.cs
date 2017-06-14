@@ -79,7 +79,7 @@ namespace RSG
         /// <summary>
         /// Class to return when we call .End()
         /// </summary>
-        TParent parentBuilder;
+        private readonly TParent parentBuilder;
 
         /// <summary>
         /// The current state we're building.
