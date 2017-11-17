@@ -8,3 +8,7 @@ install:
 script:
   - xbuild /p:Configuration=Debug Fluent-State-Machine.sln
   - mono ./testrunner/xunit.runners.1.9.2/tools/xunit.console.exe ./Tests/bin/Debug/Fluent-State-Machine.Tests.dll
+
+group: stable
+dist: xenial
+os: linux
